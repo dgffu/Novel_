@@ -268,32 +268,35 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
 
-      function isMobileDevice() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-               ('ontouchstart' in window && window.innerWidth <= 1024);
+      function getMobileOS() {
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        const isiOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isAndroid = /Android/i.test(ua);
+        if (isiOS) return 'ios';
+        if (isAndroid) return 'android';
+        return null;
       }
 
       function launchNativeYouTubeApp(youtubeId) {
-        const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        const isAndroid = /Android/i.test(navigator.userAgent);
+        const os = getMobileOS();
+        const webUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
 
-        if (isiOS) {
-          // iOS YouTube App Scheme with fallback to web
+        if (os === 'ios') {
           window.location.href = `youtube://www.youtube.com/watch?v=${youtubeId}`;
           setTimeout(() => {
-            window.location.href = `https://www.youtube.com/watch?v=${youtubeId}`;
+            window.location.href = webUrl;
           }, 400);
-        } else if (isAndroid) {
-          // Android Native Intent to force YouTube App
+        } else if (os === 'android') {
           window.location.href = `intent://www.youtube.com/watch?v=${youtubeId}#Intent;package=com.google.android.youtube;scheme=https;end`;
         } else {
-          window.location.href = `https://www.youtube.com/watch?v=${youtubeId}`;
+          window.location.href = webUrl;
         }
       }
 
       const handleVideoCardClick = (e) => {
         if (e.target.closest('.btn-edit') || e.target.closest('.btn-delete')) return;
-        if (isMobileDevice()) {
+        const mobileOS = getMobileOS();
+        if (mobileOS || ('ontouchstart' in window && window.innerWidth <= 1024)) {
           launchNativeYouTubeApp(video.youtubeId);
         } else {
           CustomPlayer.openPlayer(video);
