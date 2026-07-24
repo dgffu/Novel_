@@ -55,10 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeManageBtn = document.getElementById('close-manage-modal');
   const manageVideoListContainer = document.getElementById('manage-video-list-container');
 
-  // DOM Elements - Sobre Nós Image Upload
+  // DOM Elements - Sobre Nós Image Upload / Modal
   const aboutHeroImg = document.getElementById('about-hero-img');
   const btnChangeAboutImg = document.getElementById('btn-change-about-img');
-  const aboutFileInput = document.getElementById('about-file-input');
+  const aboutImgModal = document.getElementById('about-img-modal');
+  const closeAboutImgModalBtn = document.getElementById('close-about-img-modal');
+  const btnCancelAboutImg = document.getElementById('btn-cancel-about-img');
+  const aboutImgForm = document.getElementById('about-img-form');
+  const aboutImgUrlInput = document.getElementById('about-img-url-input');
+  const aboutImgPreviewBox = document.getElementById('about-img-preview-box');
+  const aboutImgPreview = document.getElementById('about-img-preview');
 
   // DOM Elements - Contact Form
   const contactForm = document.getElementById('contact-form');
@@ -331,62 +337,47 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
+  function openAboutImgModal() {
+    if (!aboutImgModal) return;
+    const currentUrl = StorageEngine.getAboutImage();
+    if (aboutImgUrlInput) aboutImgUrlInput.value = currentUrl;
+    if (aboutImgPreview) aboutImgPreview.src = currentUrl;
+    if (aboutImgPreviewBox) aboutImgPreviewBox.style.display = 'block';
+    aboutImgModal.classList.add('active');
+  }
+
+  function closeAboutImgModal() {
+    if (aboutImgModal) aboutImgModal.classList.remove('active');
+  }
+
   if (btnChangeAboutImg) {
-    btnChangeAboutImg.onclick = () => triggerAboutImageUpload();
+    btnChangeAboutImg.onclick = () => openAboutImgModal();
+  }
+  if (closeAboutImgModalBtn) {
+    closeAboutImgModalBtn.onclick = () => closeAboutImgModal();
+  }
+  if (btnCancelAboutImg) {
+    btnCancelAboutImg.onclick = () => closeAboutImgModal();
   }
 
-  function triggerAboutImageUpload() {
-    if (aboutFileInput) {
-      aboutFileInput.click();
-    }
+  if (aboutImgUrlInput) {
+    aboutImgUrlInput.oninput = (e) => {
+      const url = e.target.value.trim();
+      if (url && aboutImgPreview && aboutImgPreviewBox) {
+        aboutImgPreview.src = url;
+        aboutImgPreviewBox.style.display = 'block';
+      }
+    };
   }
 
-  // Helper to compress uploaded image files to crisp ~150KB JPEG for fast storage & sync
-  function compressImageFile(file, maxWidth = 1400, quality = 0.82) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-
-          if (width > maxWidth) {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-          resolve(compressedDataUrl);
-        };
-        img.onerror = reject;
-        img.src = e.target.result;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  if (aboutFileInput) {
-    aboutFileInput.onchange = async (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        try {
-          const compressedDataUrl = await compressImageFile(file, 1400, 0.82);
-          StorageEngine.saveAboutImage(compressedDataUrl);
-          if (aboutHeroImg) {
-            aboutHeroImg.src = compressedDataUrl;
-          }
-        } catch (err) {
-          console.error('Error compressing image:', err);
-        }
+  if (aboutImgForm) {
+    aboutImgForm.onsubmit = (e) => {
+      e.preventDefault();
+      const url = aboutImgUrlInput ? aboutImgUrlInput.value.trim() : '';
+      if (url) {
+        StorageEngine.saveAboutImage(url);
+        if (aboutHeroImg) aboutHeroImg.src = url;
+        closeAboutImgModal();
       }
     };
   }

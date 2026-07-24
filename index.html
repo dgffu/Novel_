@@ -170,14 +170,13 @@
                 src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80"
                 alt="Filmagem Novel">
               <button type="button" id="btn-change-about-img" class="btn-change-about-img"
-                title="Alterar Foto Sobre Nós">
+                title="Alterar Foto da Seção Sobre">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                   <circle cx="12" cy="13" r="4"></circle>
                 </svg>
-                Alterar Foto
+                Alterar Foto (Link)
               </button>
-              <input type="file" id="about-file-input" accept="image/*" style="display: none;">
             </div>
           </div>
         </div>
@@ -504,6 +503,43 @@
       <div class="manage-video-list" id="manage-video-list-container">
         <!-- Rendered dynamically via app.js -->
       </div>
+    </div>
+  </div>
+
+  <!-- Modal: Alterar Link da Foto Sobre -->
+  <div id="about-img-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Alterar Foto da Seção <span>Sobre</span></h3>
+        <button type="button" id="close-about-img-modal" class="close-modal-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="about-img-form">
+        <div class="form-group">
+          <label for="about-img-url-input">Cole a URL online da imagem *</label>
+          <input type="url" id="about-img-url-input" class="form-control" placeholder="https://images.unsplash.com/photo-..." required>
+          <small style="display: block; margin-top: 0.35rem; color: var(--text-muted); font-size: 0.8rem;">
+            Cole qualquer link direto de imagem online.
+          </small>
+        </div>
+
+        <div id="about-img-preview-box" style="margin-top: 1rem; display: none;">
+          <label style="font-size: 0.8rem; font-weight: 600; margin-bottom: 0.3rem; display: block; color: var(--text-color);">Pré-visualização:</label>
+          <div style="width: 100%; height: 180px; border-radius: var(--radius-sm); overflow: hidden; border: var(--border-fine);">
+            <img id="about-img-preview" src="" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+          <button type="button" class="btn-secondary" id="btn-cancel-about-img">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar Foto</button>
+        </div>
+      </form>
     </div>
   </div>
 

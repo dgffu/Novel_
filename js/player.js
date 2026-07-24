@@ -279,19 +279,47 @@ const CustomPlayer = (() => {
     }
   }
 
+  function enablePseudoFullscreen() {
+    if (wrapper) wrapper.classList.add('mobile-pseudo-fullscreen');
+    if (modal) modal.classList.add('mobile-pseudo-fullscreen');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function disablePseudoFullscreen() {
+    if (wrapper) wrapper.classList.remove('mobile-pseudo-fullscreen');
+    if (modal) modal.classList.remove('mobile-pseudo-fullscreen');
+    document.body.style.overflow = '';
+  }
+
   function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      if (wrapper.requestFullscreen) {
-        wrapper.requestFullscreen();
-      } else if (wrapper.webkitRequestFullscreen) {
+    const isFullscreen = document.fullscreenElement || 
+                         document.webkitFullscreenElement || 
+                         (wrapper && wrapper.classList.contains('mobile-pseudo-fullscreen'));
+
+    if (!isFullscreen) {
+      if (wrapper && wrapper.requestFullscreen) {
+        wrapper.requestFullscreen().catch(() => enablePseudoFullscreen());
+      } else if (wrapper && wrapper.webkitRequestFullscreen) {
         wrapper.webkitRequestFullscreen();
+      } else {
+        enablePseudoFullscreen();
       }
     } else {
       if (document.exitFullscreen) {
-        document.exitFullscreen();
+        document.exitFullscreen().catch(() => {});
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
       }
+      disablePseudoFullscreen();
     }
   }
+
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) disablePseudoFullscreen();
+  });
+  document.addEventListener('webkitfullscreenchange', () => {
+    if (!document.webkitFullscreenElement) disablePseudoFullscreen();
+  });
 
   function closePlayer() {
     stopProgressLoop();
