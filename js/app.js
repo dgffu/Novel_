@@ -270,18 +270,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
       function isMobileDevice() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-               ('ontouchstart' in window && window.innerWidth <= 800);
+               ('ontouchstart' in window && window.innerWidth <= 1024);
       }
 
-      const thumbWrapper = card.querySelector('.thumb-wrapper');
-      thumbWrapper.onclick = () => {
+      function launchNativeYouTubeApp(youtubeId) {
+        const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isAndroid = /Android/i.test(navigator.userAgent);
+
+        if (isiOS) {
+          // iOS YouTube App Scheme with fallback to web
+          window.location.href = `youtube://www.youtube.com/watch?v=${youtubeId}`;
+          setTimeout(() => {
+            window.location.href = `https://www.youtube.com/watch?v=${youtubeId}`;
+          }, 400);
+        } else if (isAndroid) {
+          // Android Native Intent to force YouTube App
+          window.location.href = `intent://www.youtube.com/watch?v=${youtubeId}#Intent;package=com.google.android.youtube;scheme=https;end`;
+        } else {
+          window.location.href = `https://www.youtube.com/watch?v=${youtubeId}`;
+        }
+      }
+
+      const handleVideoCardClick = (e) => {
+        if (e.target.closest('.btn-edit') || e.target.closest('.btn-delete')) return;
         if (isMobileDevice()) {
-          const ytUrl = `https://www.youtube.com/watch?v=${video.youtubeId}`;
-          window.location.href = ytUrl;
+          launchNativeYouTubeApp(video.youtubeId);
         } else {
           CustomPlayer.openPlayer(video);
         }
       };
+
+      card.onclick = handleVideoCardClick;
 
       if (isAdmin) {
         const editBtn = card.querySelector('.btn-edit');
