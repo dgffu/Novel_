@@ -279,6 +279,12 @@ const CustomPlayer = (() => {
     }
   }
 
+  function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           ('ontouchstart' in window) ||
+           (navigator.maxTouchPoints > 0);
+  }
+
   function enablePseudoFullscreen() {
     if (wrapper) wrapper.classList.add('mobile-pseudo-fullscreen');
     if (modal) modal.classList.add('mobile-pseudo-fullscreen');
@@ -291,18 +297,26 @@ const CustomPlayer = (() => {
     document.body.style.overflow = '';
   }
 
-  function toggleFullscreen() {
+  function toggleFullscreen(e) {
+    if (e && typeof e.stopPropagation === 'function') {
+      e.stopPropagation();
+    }
+
     const isFullscreen = document.fullscreenElement || 
                          document.webkitFullscreenElement || 
                          (wrapper && wrapper.classList.contains('mobile-pseudo-fullscreen'));
 
     if (!isFullscreen) {
-      if (wrapper && wrapper.requestFullscreen) {
-        wrapper.requestFullscreen().catch(() => enablePseudoFullscreen());
-      } else if (wrapper && wrapper.webkitRequestFullscreen) {
-        wrapper.webkitRequestFullscreen();
-      } else {
+      if (isMobileDevice()) {
         enablePseudoFullscreen();
+      } else {
+        if (wrapper && wrapper.requestFullscreen) {
+          wrapper.requestFullscreen().catch(() => enablePseudoFullscreen());
+        } else if (wrapper && wrapper.webkitRequestFullscreen) {
+          wrapper.webkitRequestFullscreen();
+        } else {
+          enablePseudoFullscreen();
+        }
       }
     } else {
       if (document.exitFullscreen) {
@@ -323,6 +337,7 @@ const CustomPlayer = (() => {
 
   function closePlayer() {
     stopProgressLoop();
+    disablePseudoFullscreen();
     if (hideControlsTimer) clearTimeout(hideControlsTimer);
     if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
       ytPlayer.stopVideo();
@@ -335,13 +350,20 @@ const CustomPlayer = (() => {
     if (playPauseBtn) playPauseBtn.onclick = togglePlay;
     if (muteBtn) muteBtn.onclick = toggleMute;
     if (closeBtn) closeBtn.onclick = closePlayer;
-    if (fullscreenBtn) fullscreenBtn.onclick = toggleFullscreen;
+
+    if (fullscreenBtn) {
+      fullscreenBtn.onclick = (e) => toggleFullscreen(e);
+      fullscreenBtn.ontouchend = (e) => {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
+        toggleFullscreen(e);
+      };
+    }
 
     if (wrapper) {
       wrapper.onmousemove = showControlsTemp;
       wrapper.onmouseenter = showControlsTemp;
       wrapper.onmouseleave = handleMouseLeaveWrapper;
-      wrapper.ontouchstart = showControlsTemp;
+      wrapper.ontouchstart = () => showControlsTemp();
     }
 
     if (scrubber) {
