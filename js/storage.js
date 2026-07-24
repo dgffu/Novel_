@@ -1,11 +1,12 @@
 /**
- * NOVEL - Storage Engine
- * Manages video data, YouTube URL parsing, tag extraction, and LocalStorage persistence.
- * Pre-populates cinematic showcase items.
+ * NOVEL - Storage Engine & Cloud Realtime Synchronizer
+ * Manages video data, YouTube URL parsing, tag extraction, LocalStorage persistence,
+ * and Real-Time Online Cloud Synchronization across all devices.
  */
 
 const StorageEngine = (() => {
   const STORAGE_KEY = 'novel_portfolio_videos_v1';
+  const CLOUD_ENDPOINT = 'https://jsonblob.com/api/jsonBlob/019f954d-319b-742c-8943-5f73c3b107a8';
 
   // Default initial videos showcasing Novel's portfolio
   const DEFAULT_VIDEOS = [
@@ -93,13 +94,55 @@ const StorageEngine = (() => {
   }
 
   /**
-   * Saves updated videos array to LocalStorage
+   * Saves updated videos array to LocalStorage AND syncs to cloud
    */
   function saveVideos(videos) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
+      syncToCloud(videos);
     } catch (e) {
       console.error('Error writing to storage:', e);
+    }
+  }
+
+  /**
+   * Syncs videos array to Cloud JSON endpoint for real-time multi-device sync
+   */
+  async function syncToCloud(videos) {
+    try {
+      await fetch(CLOUD_ENDPOINT, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(videos)
+      });
+    } catch (e) {
+      console.warn('Cloud sync offline fallback to local:', e);
+    }
+  }
+
+  /**
+   * Fetches latest videos from online Cloud endpoint and notifies app if changed
+   */
+  async function fetchCloudVideos() {
+    try {
+      const res = await fetch(CLOUD_ENDPOINT, { cache: 'no-store' });
+      if (res.ok) {
+        const cloudVideos = await res.json();
+        if (Array.isArray(cloudVideos) && cloudVideos.length > 0) {
+          const currentLocalStr = localStorage.getItem(STORAGE_KEY);
+          const cloudStr = JSON.stringify(cloudVideos);
+
+          if (currentLocalStr !== cloudStr) {
+            localStorage.setItem(STORAGE_KEY, cloudStr);
+            window.dispatchEvent(new CustomEvent('novel_videos_updated', { detail: cloudVideos }));
+          }
+        }
+      }
+    } catch (e) {
+      // Silent catch
     }
   }
 
@@ -171,20 +214,6 @@ const StorageEngine = (() => {
   }
 
   /**
-   * Returns list of all unique SEO tags extracted from videos
-   */
-  function getAllTags() {
-    const videos = getVideos();
-    const tagSet = new Set();
-    videos.forEach(v => {
-      if (Array.isArray(v.tags)) {
-        v.tags.forEach(tag => tagSet.add(tag));
-      }
-    });
-    return Array.from(tagSet);
-  }
-
-  /**
    * Reorders video at fromIndex to toIndex in portfolio
    */
   function reorderVideos(fromIndex, toIndex) {
@@ -196,6 +225,20 @@ const StorageEngine = (() => {
     videos.splice(toIndex, 0, movedItem);
     saveVideos(videos);
     return videos;
+  }
+
+  /**
+   * Returns list of all unique SEO tags extracted from videos
+   */
+  function getAllTags() {
+    const videos = getVideos();
+    const tagSet = new Set();
+    videos.forEach(v => {
+      if (Array.isArray(v.tags)) {
+        v.tags.forEach(tag => tagSet.add(tag));
+      }
+    });
+    return Array.from(tagSet);
   }
 
   /**
@@ -230,6 +273,7 @@ const StorageEngine = (() => {
     getAllTags,
     extractYouTubeId,
     getAboutImage,
-    saveAboutImage
+    saveAboutImage,
+    fetchCloudVideos
   };
 })();

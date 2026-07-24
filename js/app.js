@@ -72,6 +72,15 @@ document.addEventListener('DOMContentLoaded', () => {
   renderTagFilters();
   renderVideoGrid();
 
+  // Cloud Realtime Multi-Device Sync
+  StorageEngine.fetchCloudVideos();
+  window.addEventListener('novel_videos_updated', () => {
+    renderTagFilters();
+    renderVideoGrid();
+  });
+  window.addEventListener('focus', () => StorageEngine.fetchCloudVideos());
+  setInterval(() => StorageEngine.fetchCloudVideos(), 10000);
+
   /* ==========================================================================
      1. TAB NAVIGATION
      ========================================================================== */
