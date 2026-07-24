@@ -1,133 +1,531 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Novel Audiovisual</title>
-  <link rel="icon" type="image/png" href="favico.png" />
-  <style>
-    :root{
-      --bg:#f4f7fb;
-      --card:#ffffff;
-      --muted:#6b7280;
-      --accent:#ff8a00;
-      --shadow: 0 8px 30px rgba(16,24,40,0.08);
-      font-family: Outfit;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:32px;
-      color:#111827;
-        height: 100vh;
-        background: linear-gradient(120deg, #fcac00, #EE7000);
-        background-size: 200% 200%;
-        animation: gradientMove 2s ease infinite;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-@keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-    }
-    .card{
-      width:100%;
-      max-width:760px;
-      background:var(--card);
-      border-radius:16px;
-      padding:56px 32px;
-      text-align:center;
-      box-shadow:var(--shadow);
-    }
-    .icon-wrap{
-      width:10%;
-      height:10%;
-      margin:0 auto 22px;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(255,138,0,0.08);
-      backdrop-filter: blur(4px);
-    }
-    /* simple construction / cone + helmet svg styling */
-    .icon{width:96px;height:96px}
-    h1{
-      margin:6px 0 8px;
-      font-size:20px;
-      font-weight:600;
-      text-transform:none;
-    }
-    h3{
-      margin:0 0 18px;
-      font-size:15px;
-      font-weight:500;
-      color:var(--muted);
-      line-height:1.4;
-    }
-    a.portfolio{
-      color:var(--accent);
-      text-decoration:none;
-      font-weight:600;
-    }
-    a.portfolio:hover{text-decoration:underline}
-    .note{
-      margin-top:18px;
-      font-size:13px;
-      color:#9aa4b2;
-    }
-    /* subtle floating animation */
-    @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
-    .icon-wrap{animation:floaty 4s ease-in-out infinite}
-    /* responsive */
-    @media (max-width:420px){
-      .card{padding:36px 20px}
-      .icon-wrap{width:130px;height:130px}
-      .icon{width:78px;height:78px}
-      h1{font-size:18px}
-      h3{font-size:14px}
-    }
-  </style>
+  <!-- Primary SEO Meta Tags -->
+  <title id="seo-title">Novel | Produtora Audiovisual</title>
+  <meta id="seo-description" name="description"
+    content="Novel Produtora Audiovisual. Portfólio de filmes e campanhas comerciais.">
+  <meta id="seo-keywords" name="keywords" content="produtora audiovisual, cinema, comerciais, videoclipes, Novel">
+  <meta name="author" content="Novel Produtora Audiovisual">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://novel.art.br/">
+  <meta property="og:title" content="Novel | Produtora Audiovisual">
+  <meta property="og:description" content="Portfólio audiovisual de filmes e campanhas.">
+  <meta property="og:image" content="https://img.youtube.com/vi/LXb3EKWsInQ/maxresdefault.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+
+  <!-- Google Fonts Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-  <main class="card" role="main">
-    <div class="icon-wrap" aria-hidden="true">
-      <!-- construction helmet & cone combined SVG -->
-     <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 778.94 746.12">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: #ee7000;
-      }
-    </style>
-  </defs>
-  <g id="Camada_1" data-name="Camada 1">
-    <g>
-      <path class="cls-1" d="M759.78,200.11c-.63.4-1.26.82-1.89,1.26-24.08,16.17-43.35,37.65-57.68,64.49-17.72,33.21-30.37,68.5-42.56,103.99-9.17,26.7-15.35,54.3-24.18,81.09-10.62,32.26-22.11,64.22-35.54,95.45-1.28,2.98-2.79,5.86-4.42,8.66-12.26,21.06-22.11,43.34-33.37,64.91-7.88,15.1-18.09,28.13-28.53,41.46-6.28,8.02-16.37,9.69-24.79,3.73-15.49-10.94-18.64-26.87-17.47-44.29.74-10.98,4.36-21.3,8.71-31.37,17.78-41.19,35.91-82.24,53.17-123.64,28.7-68.83-3.87-140.58-54.97-173.71-30.87-20.02-64.73-22.18-100.13-15.34-22.49,4.35-39.65,17.1-56.65,31.07-28.33,23.28-40.26,54.1-43.73,89.56-3.44,35.17,5.48,67.41,20.93,98.43,8.78,17.64,17.14,35.5,26.14,53.03,11.97,23.33,22.03,47.43,28.56,72.79,3.71,14.4.39,33.62-16.23,41.41-7.93,3.72-25.35,2.6-31.8-2.95-.81-.69-10.07-10.63-10.6-11.59-22-40-30.72-54.29-52-82-10.63-13.84-22.21-28.38-36.2-56.44-6.09-12.23-10.6-25.19-16.14-38.42-.45-1.07-1.93-1.14-2.48-.13-5.88,10.69-11.47,20.83-17.02,30.99-12.56,22.94-25.51,45.65-39.68,67.64-10.8,16.77-27.12,22.38-46,21.46-11.16-.54-20.89-11.92-21.35-23.81-.33-8.71,1.09-16.95,5.06-25.09,16.18-33.13,29.31-67.61,43.96-101.42,9.3-21.47,18.29-43.07,27.43-64.6,0-.02.01-.03.01-.04.55-1.29-.98-2.48-2.1-1.62-7.87,5.98-15.77,11.94-23.6,18-19.81,15.35-39.66,30.68-61.09,43.71-15.81,9.62-33.1,11.4-50.62,7.68-14.81-3.15-24.08-18.12-19.94-32.69,2.24-7.87,6.25-14.77,12.5-20.48,22.18-20.3,45.31-39.52,68.28-58.89,75.31-63.54,150.11-127.69,224.4-192.41,24.34-21.21,51.34-35.79,82.5-44.62,36.5-10.33,72.22-23.44,108.28-35.36,7.03-2.32,14.07-4.65,21.1-6.97,52.37-17.31,104.75-34.62,157.1-51.98,20.24-4.08,39.4,3.64,48.03,23.43l51.65,118.47c9.04,20.73,2.77,44.62-15.05,57.15Z"/>
-      <path class="cls-1" d="M431.01,694.97c13.49,0,26.98-.03,40.47.01,8.23.03,14.34,5.78,14.47,13.5.11,6.4-4.48,12.06-10.59,13.69-5.7,1.52-12.18-.87-16.54,4.24-1.28,1.5-2.22,3.28-3,5.09-4.87,11.27-15.61,15.99-27.95,14.28-11.23-1.55-18.98-8.32-22.69-19.06-1.05-3.03-2.27-4.14-5.34-3.94-3.36.22-6.74.14-10.11.02-7.96-.27-13.79-6.43-13.67-14.35.11-7.49,6.2-13.43,14.01-13.47,13.65-.06,27.3-.02,40.95-.02Z"/>
-      <path class="cls-1" d="M431.42,659.27c13.34,0,26.69-.03,40.03,0,8.4.03,14.47,5.69,14.5,13.41.03,7.72-6.01,13.49-14.37,13.5-27.17.04-54.34.05-81.51,0-7.97-.01-13.98-5.86-14.01-13.38-.03-7.54,5.97-13.48,13.88-13.52,13.83-.07,27.65-.02,41.48-.02Z"/>
-      <path class="cls-1" d="M419.56,314.88c45.2,2.48,86.73,34.99,99.89,78.43,1.57,5.17,8.25,7.49,12.98,5.63,5.38-2.12,7.2-7.79,5.63-12.98-15.06-49.75-63.85-88.05-115.76-90.9-5.39-.29-10.49,2.88-11.27,8.55-.69,5.02,3.13,10.97,8.55,11.27h0Z"/>
-    </g>
-  </g>
-</svg>
+
+  <!-- Filmic Texture Overlay -->
+  <div class="vintage-overlay"></div>
+
+  <!-- Header Section (Only Logo Image, No Brand Text) -->
+  <header class="main-header">
+    <div class="container header-container">
+      <!-- Only Logo Image -->
+      <div class="brand-logo" id="logo-btn" title="Novel Produtora Audiovisual">
+        <img src="assets/logo.png" alt="Novel" class="logo-img">
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="main-nav">
+        <a href="#portfolio" class="nav-link active" data-tab="portfolio">Portfólio</a>
+        <a href="#sobre" class="nav-link" data-tab="sobre">Sobre nós</a>
+        <a href="#converse" class="nav-link" data-tab="converse">Converse</a>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <div class="admin-menu-wrapper">
+          <!-- Admin Login / Dropdown Button -->
+          <button id="header-admin-btn" class="btn-admin" title="Área Restrita" aria-label="Área Restrita">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span id="admin-btn-text" style="display: none;"></span>
+          </button>
+
+          <!-- Admin Dropdown Menu -->
+          <div class="admin-dropdown-menu" id="admin-dropdown-menu">
+            <button type="button" class="admin-dropdown-item" id="admin-item-upload">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Upload Vídeo
+            </button>
+            <button type="button" class="admin-dropdown-item" id="admin-item-manage">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+              Gerenciar Vídeos
+            </button>
+            <button type="button" class="admin-dropdown-item danger" id="admin-item-logout">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              Sair
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+  </header>
 
-    <h1>A Novel está construindo uma experiência de alto nível para você.</h1>
-    <h3>Enquanto isso, acesse <a class="portfolio" href="https://giffu.com.br" target="_blank" rel="noopener noreferrer">giffu.com.br</a> e confira o portfólio pessoal.</h3>
+  <!-- Main Content Wrapper -->
+  <main class="tab-content-wrapper">
 
-    <p class="note">Voltaremos em breve — obrigado pela paciência.</p>
+    <!-- ================= PORTFÓLIO TAB ================= -->
+    <section id="portfolio-pane" class="tab-pane active">
+      <!-- Minimalist Hero -->
+      <div class="hero-section">
+        <div class="container">
+          <h1 class="hero-title">Filmes & <em>Produções Audiovisuais</em></h1>
+        </div>
+      </div>
+
+      <div class="container" style="margin-top: 2rem;">
+        <!-- Filters & Search Controls -->
+        <div class="portfolio-controls">
+          <!-- SEO Dynamic Tag Filters -->
+          <div class="tag-filters" id="tag-filters-container">
+            <button class="filter-btn active" data-tag="all">Todos</button>
+            <!-- Generated dynamically via JS -->
+          </div>
+
+          <!-- Search Input -->
+          <div class="portfolio-search">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="search-input" placeholder="Buscar...">
+          </div>
+        </div>
+
+        <!-- Video Portfolio Grid -->
+        <div class="video-grid" id="video-grid">
+          <!-- Rendered dynamically via storage.js & app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SOBRE NÓS TAB ================= -->
+    <section id="sobre-pane" class="tab-pane">
+      <div class="container">
+        <div class="about-section">
+          <!-- Text Content -->
+          <div class="about-text">
+            <h2>Você merece <span>cinema</span>.</h2>
+            <p>
+              Produção audiovisual com olhar único, técnica apurada e estética refinada.
+            </p>
+
+            <div class="about-pillars">
+              <div class="pillar-card">
+                <h4>Pré-Produção</h4>
+                <p>No jeito Novel de contar histórias, há <span>zelo</span> em cada etapa.</p>
+              </div>
+              <div class="pillar-card">
+                <h4>Direção de Fotografia</h4>
+                <p>Captamos atentamente de forma <span>exclusiva</span> a cada projeto.</p>
+              </div>
+              <div class="pillar-card">
+                <h4>Edição & Motion</h4>
+                <p>Edições refinadas e não lineares. <span>Não negociamos</span> qualidade.</p>
+              </div>
+              <div class="pillar-card">
+                <h4>Entrega</h4>
+                <p><span>Cordialidade e excelência</span> resumem o compromisso Novel.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual Showcase Frame -->
+          <div class="about-visual">
+            <div class="about-frame">
+              <img id="about-hero-img"
+                src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80"
+                alt="Filmagem Novel">
+              <button type="button" id="btn-change-about-img" class="btn-change-about-img"
+                title="Alterar Foto Sobre Nós">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                Alterar Foto
+              </button>
+              <input type="file" id="about-file-input" accept="image/*" style="display: none;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONVERSE TAB ================= -->
+    <section id="converse-pane" class="tab-pane">
+      <div class="container">
+        <div class="contact-section">
+          <!-- Contact Direct Info -->
+          <div class="contact-info">
+            <h2>Converse conosco</h2>
+
+            <div class="contact-channels">
+              <div class="channel-item">
+                <div class="channel-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                </div>
+                <div class="channel-details">
+                  <h5>E-mail</h5>
+                  <a href="mailto:pedido@novel.art.br">pedido@novel.art.br</a>
+                </div>
+              </div>
+
+              <div class="channel-item">
+                <div class="channel-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                </div>
+                <div class="channel-details">
+                  <h5>WhatsApp</h5>
+                  <a href="https://wa.me/5511935857206?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%20audiovisual."
+                    target="_blank" rel="noopener">+55 (11) 93585-7206</a>
+                </div>
+              </div>
+
+              <div class="channel-item">
+                <div class="channel-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                  </svg>
+                </div>
+                <div class="channel-details">
+                  <h5>Instagram Novel</h5>
+                  <a href="https://instagram.com/novelfilmes" target="_blank" rel="noopener">@novelfilmes</a>
+                </div>
+              </div>
+
+              <div class="channel-divider"></div>
+
+              <div class="channel-item">
+                <div class="channel-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                  </svg>
+                </div>
+                <div class="channel-details">
+                  <h5>Instagram do Editor-Chefe</h5>
+                  <a href="https://instagram.com/giffu.mov" target="_blank" rel="noopener">@giffu.mov</a>
+                </div>
+              </div>
+
+              <div class="channel-item">
+                <div class="channel-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path
+                      d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                </div>
+                <div class="channel-details">
+                  <h5>Portfólio do Editor-Chefe</h5>
+                  <a href="https://giffu.com.br" target="_blank" rel="noopener">giffu.com.br</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div class="contact-form-wrapper">
+            <form id="contact-form">
+              <div class="form-group">
+                <label for="contact-name">Nome</label>
+                <input type="text" id="contact-name" class="form-control" placeholder="Seu nome" required>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-email">E-mail</label>
+                <input type="email" id="contact-email" class="form-control" placeholder="seuemail@dominio.com" required>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-type">Projeto</label>
+                <select id="contact-type" class="form-control">
+                  <option value="Comercial / Publicidade">Comercial / Publicidade</option>
+                  <option value="Filmes de Eventos">Filmes de Eventos</option>
+                  <option value="Videoclipe Musical">Videoclipe Musical</option>
+                  <option value="Conteúdo para YouTube">Conteúdo para YouTube</option>
+                  <option value="Vídeos Curtos">Vídeos Curtos</option>
+                  <option value="Dúvidas & Sugestões">Dúvidas & Sugestões</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-date">Prazo sugerido</label>
+                <input type="date" id="contact-date" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label for="contact-message">Mensagem</label>
+                <textarea id="contact-message" class="form-control" placeholder="Detalhes do projeto..."
+                  required></textarea>
+              </div>
+
+              <div id="contact-status" class="alert-message"></div>
+
+              <button type="submit" class="btn-primary">
+                Enviar
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+
+              <p class="form-disclaimer">* O projeto passará por análise e entraremos em contato em breve. ;)</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <!-- Custom Responsive YouTube Player Modal -->
+  <div id="player-modal" class="player-modal" role="dialog" aria-modal="true">
+    <div class="player-container">
+      <div class="player-header">
+        <div class="player-info">
+          <h3 id="player-title">Título do Vídeo</h3>
+          <p id="player-subtitle">Subtítulo ou descrição da obra</p>
+        </div>
+        <button id="close-player" class="close-player-btn" title="Fechar (Esc)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Custom Player Wrapper with Controls Overlay -->
+      <div class="custom-player-wrapper">
+        <div id="player-iframe-container" class="youtube-iframe-container">
+          <!-- Target for YT.Player iframe injection -->
+        </div>
+
+        <!-- Custom Player UI Controls Overlay -->
+        <div class="custom-controls-overlay" id="controls-overlay">
+          <!-- Timeline Scrubber Bar -->
+          <div class="scrubber-wrapper" id="ctrl-scrubber" title="Clique para buscar">
+            <div class="scrubber-progress" id="ctrl-progress">
+              <div class="scrubber-thumb"></div>
+            </div>
+          </div>
+
+          <div class="controls-row">
+            <div class="controls-left">
+              <!-- Play/Pause Toggle -->
+              <button class="ctrl-btn" id="ctrl-play-pause" title="Play/Pause">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </button>
+
+              <!-- Mute & Volume Slider -->
+              <div class="volume-container">
+                <button class="ctrl-btn" id="ctrl-mute" title="Mutar/Desmutar">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                  </svg>
+                </button>
+                <input type="range" class="volume-slider" id="ctrl-volume" min="0" max="100" value="80" title="Volume">
+              </div>
+
+              <!-- Time Counter -->
+              <span class="time-display" id="ctrl-time">00:00 / 00:00</span>
+            </div>
+
+            <div class="controls-right">
+              <!-- Fullscreen Button -->
+              <button class="ctrl-btn" id="ctrl-fullscreen" title="Tela Cheia">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secure Login Modal (Área Restrita) -->
+  <div id="login-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Área <span>Restrita</span></h3>
+        <button id="close-login-modal" class="close-modal-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div id="login-alert" class="alert-message"></div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-user">Usuário</label>
+          <input type="text" id="login-user" class="form-control" autocomplete="username" required
+            placeholder="Usuário">
+        </div>
+
+        <div class="form-group">
+          <label for="login-pass">Senha</label>
+          <input type="password" id="login-pass" class="form-control" autocomplete="current-password" required
+            placeholder="Senha">
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top: 1.25rem;">
+          Entrar
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Video Upload / Edit Modal -->
+  <div id="admin-video-modal" class="modal-overlay">
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <h3 class="modal-title" id="admin-modal-title">Upload de <span>Vídeo</span></h3>
+        <button id="close-admin-modal" class="close-modal-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div id="admin-video-alert" class="alert-message"></div>
+
+      <form id="admin-video-form">
+        <input type="hidden" id="admin-video-id">
+
+        <div class="form-group">
+          <label for="admin-video-url">Link do YouTube *</label>
+          <input type="url" id="admin-video-url" class="form-control" placeholder="https://www.youtube.com/watch?v=..."
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="admin-video-thumb">Thumbnail 16:9 (URL) - Opcional</label>
+          <input type="url" id="admin-video-thumb" class="form-control"
+            placeholder="Deixe em branco para thumbnail automática">
+
+          <!-- Image Preview 16:9 Aspect Ratio -->
+          <div class="image-preview-wrapper" id="thumb-preview-box">
+            <img id="thumb-preview-img" src="" alt="Preview">
+            <span class="preview-placeholder">Preview 16:9</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="admin-video-title">Título *</label>
+          <input type="text" id="admin-video-title" class="form-control" placeholder="Título do vídeo" required>
+        </div>
+
+        <div class="form-group">
+          <label for="admin-video-subtitle">Subtítulo *</label>
+          <input type="text" id="admin-video-subtitle" class="form-control" placeholder="Descrição curta" required>
+        </div>
+
+        <div class="form-group">
+          <label for="admin-video-tags">SEO Tags (Vírgula) *</label>
+          <input type="text" id="admin-video-tags" class="form-control" placeholder="Ex: Publicidade, Fashion, Cinema"
+            required>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button type="submit" class="btn-primary" style="flex: 1;">
+            Salvar Vídeo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Manage Videos Modal -->
+  <div id="admin-manage-modal" class="modal-overlay">
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <h3 class="modal-title">Gerenciar <span>Vídeos</span></h3>
+        <button id="close-manage-modal" class="close-modal-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="manage-video-list" id="manage-video-list-container">
+        <!-- Rendered dynamically via app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimalist Footer (Only Logo Image) -->
+  <footer class="main-footer">
+    <div class="container footer-container">
+      <img src="assets/logo.png" alt="Novel" style="height: 32px; width: auto;">
+      <p class="footer-copyright">&copy; 2026 Novel. <a href="mailto:pedido@novel.art.br"
+          style="color: var(--primary);">pedido@novel.art.br</a></p>
+      <div class="footer-links">
+        <a href="#portfolio" data-tab="portfolio">Portfólio</a>
+        <a href="#sobre" data-tab="sobre">Sobre nós</a>
+        <a href="#converse" data-tab="converse">Converse</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/security.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/app.js"></script>
 </body>
+
 </html>
