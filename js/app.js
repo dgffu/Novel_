@@ -73,13 +73,21 @@ document.addEventListener('DOMContentLoaded', () => {
   renderVideoGrid();
 
   // Cloud Realtime Multi-Device Sync
-  StorageEngine.fetchCloudVideos();
-  window.addEventListener('novel_videos_updated', () => {
+  StorageEngine.fetchCloudState();
+
+  window.addEventListener('novel_state_updated', () => {
     renderTagFilters();
     renderVideoGrid();
+    if (aboutHeroImg) {
+      aboutHeroImg.src = StorageEngine.getAboutImage();
+    }
+    if (adminManageModal && adminManageModal.classList.contains('active')) {
+      renderManageVideoList();
+    }
   });
-  window.addEventListener('focus', () => StorageEngine.fetchCloudVideos());
-  setInterval(() => StorageEngine.fetchCloudVideos(), 10000);
+
+  window.addEventListener('focus', () => StorageEngine.fetchCloudState());
+  setInterval(() => StorageEngine.fetchCloudState(), 8000);
 
   /* ==========================================================================
      1. TAB NAVIGATION
@@ -333,19 +341,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Helper to compress uploaded image files to crisp ~150KB JPEG for fast storage & sync
+  function compressImageFile(file, maxWidth = 1400, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+          resolve(compressedDataUrl);
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
   if (aboutFileInput) {
-    aboutFileInput.onchange = (e) => {
+    aboutFileInput.onchange = async (e) => {
       const file = e.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const dataUrl = event.target.result;
-          StorageEngine.saveAboutImage(dataUrl);
+        try {
+          const compressedDataUrl = await compressImageFile(file, 1400, 0.82);
+          StorageEngine.saveAboutImage(compressedDataUrl);
           if (aboutHeroImg) {
-            aboutHeroImg.src = dataUrl;
+            aboutHeroImg.src = compressedDataUrl;
           }
-        };
-        reader.readAsDataURL(file);
+        } catch (err) {
+          console.error('Error compressing image:', err);
+        }
       }
     };
   }

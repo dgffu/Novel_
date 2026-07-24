@@ -1,14 +1,16 @@
 /**
  * NOVEL - Storage Engine & Cloud Realtime Synchronizer
- * Manages video data, YouTube URL parsing, tag extraction, LocalStorage persistence,
- * and Real-Time Online Cloud Synchronization across all devices.
+ * Manages video portfolio data, YouTube URL parsing, tag extraction, custom Sobre image,
+ * LocalStorage persistence, and Real-Time Multi-Device Cloud Synchronization.
  */
 
 const StorageEngine = (() => {
-  const STORAGE_KEY = 'novel_portfolio_videos_v1';
+  const STORAGE_VIDEOS_KEY = 'novel_portfolio_videos_v1';
+  const STORAGE_ABOUT_KEY = 'novel_about_image_v1';
   const CLOUD_ENDPOINT = 'https://jsonblob.com/api/jsonBlob/019f954d-319b-742c-8943-5f73c3b107a8';
 
-  // Default initial videos showcasing Novel's portfolio
+  const DEFAULT_ABOUT_IMG = 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80';
+
   const DEFAULT_VIDEOS = [
     {
       id: 'v_101',
@@ -77,69 +79,115 @@ const StorageEngine = (() => {
   }
 
   /**
-   * Retrieves videos list from LocalStorage or sets initial defaults
+   * Retrieves videos list from LocalStorage or returns default
    */
   function getVideos() {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored = localStorage.getItem(STORAGE_VIDEOS_KEY);
       if (!stored) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_VIDEOS));
+        localStorage.setItem(STORAGE_VIDEOS_KEY, JSON.stringify(DEFAULT_VIDEOS));
         return DEFAULT_VIDEOS;
       }
       return JSON.parse(stored);
     } catch (e) {
-      console.error('Error reading storage:', e);
+      console.error('Error reading videos storage:', e);
       return DEFAULT_VIDEOS;
     }
   }
 
   /**
-   * Saves updated videos array to LocalStorage AND syncs to cloud
+   * Retrieves custom Sobre image URL or returns default
    */
-  function saveVideos(videos) {
+  function getAboutImage() {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
-      syncToCloud(videos);
+      const stored = localStorage.getItem(STORAGE_ABOUT_KEY);
+      return stored || DEFAULT_ABOUT_IMG;
     } catch (e) {
-      console.error('Error writing to storage:', e);
+      return DEFAULT_ABOUT_IMG;
     }
   }
 
   /**
-   * Syncs videos array to Cloud JSON endpoint for real-time multi-device sync
+   * Saves updated videos & about image to LocalStorage AND syncs to Cloud
    */
-  async function syncToCloud(videos) {
+  function saveState(videos = null, aboutImage = null) {
+    const currentVideos = videos || getVideos();
+    const currentAbout = aboutImage || getAboutImage();
+
     try {
+      localStorage.setItem(STORAGE_VIDEOS_KEY, JSON.stringify(currentVideos));
+      localStorage.setItem(STORAGE_ABOUT_KEY, currentAbout);
+    } catch (e) {
+      console.error('Error writing to local storage:', e);
+    }
+
+    syncToCloud(currentVideos, currentAbout);
+  }
+
+  /**
+   * Syncs videos & about image state to Cloud JSON endpoint
+   */
+  async function syncToCloud(videos, aboutImage) {
+    try {
+      const payload = {
+        videos: videos,
+        aboutImage: aboutImage,
+        updatedAt: Date.now()
+      };
+
       await fetch(CLOUD_ENDPOINT, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify(videos)
+        body: JSON.stringify(payload)
       });
     } catch (e) {
-      console.warn('Cloud sync offline fallback to local:', e);
+      console.warn('Cloud sync fallback to local:', e);
     }
   }
 
   /**
-   * Fetches latest videos from online Cloud endpoint and notifies app if changed
+   * Fetches state from Cloud endpoint and syncs local storage + triggers UI update
    */
-  async function fetchCloudVideos() {
+  async function fetchCloudState() {
     try {
       const res = await fetch(CLOUD_ENDPOINT, { cache: 'no-store' });
-      if (res.ok) {
-        const cloudVideos = await res.json();
-        if (Array.isArray(cloudVideos) && cloudVideos.length > 0) {
-          const currentLocalStr = localStorage.getItem(STORAGE_KEY);
-          const cloudStr = JSON.stringify(cloudVideos);
+      if (!res.ok) return;
 
-          if (currentLocalStr !== cloudStr) {
-            localStorage.setItem(STORAGE_KEY, cloudStr);
-            window.dispatchEvent(new CustomEvent('novel_videos_updated', { detail: cloudVideos }));
-          }
+      const cloudData = await res.json();
+      let cloudVideos = null;
+      let cloudAbout = null;
+
+      if (Array.isArray(cloudData)) {
+        cloudVideos = cloudData;
+      } else if (cloudData && typeof cloudData === 'object') {
+        if (Array.isArray(cloudData.videos)) cloudVideos = cloudData.videos;
+        if (cloudData.aboutImage) cloudAbout = cloudData.aboutImage;
+      }
+
+      let stateChanged = false;
+
+      if (cloudVideos && cloudVideos.length > 0) {
+        const localVideosStr = localStorage.getItem(STORAGE_VIDEOS_KEY);
+        const cloudVideosStr = JSON.stringify(cloudVideos);
+        if (localVideosStr !== cloudVideosStr) {
+          localStorage.setItem(STORAGE_VIDEOS_KEY, cloudVideosStr);
+          stateChanged = true;
         }
+      }
+
+      if (cloudAbout) {
+        const localAbout = localStorage.getItem(STORAGE_ABOUT_KEY);
+        if (localAbout !== cloudAbout) {
+          localStorage.setItem(STORAGE_ABOUT_KEY, cloudAbout);
+          stateChanged = true;
+        }
+      }
+
+      if (stateChanged) {
+        window.dispatchEvent(new CustomEvent('novel_state_updated'));
       }
     } catch (e) {
       // Silent catch
@@ -171,7 +219,7 @@ const StorageEngine = (() => {
     };
 
     videos.unshift(newVideo);
-    saveVideos(videos);
+    saveState(videos, null);
     return newVideo;
   }
 
@@ -200,7 +248,7 @@ const StorageEngine = (() => {
       tags: videoData.tags.map(t => SecurityEngine.sanitizeInput(t)).filter(t => t.length > 0)
     };
 
-    saveVideos(videos);
+    saveState(videos, null);
     return videos[index];
   }
 
@@ -210,7 +258,7 @@ const StorageEngine = (() => {
   function deleteVideo(id) {
     let videos = getVideos();
     videos = videos.filter(v => v.id !== id);
-    saveVideos(videos);
+    saveState(videos, null);
   }
 
   /**
@@ -223,8 +271,15 @@ const StorageEngine = (() => {
     }
     const [movedItem] = videos.splice(fromIndex, 1);
     videos.splice(toIndex, 0, movedItem);
-    saveVideos(videos);
+    saveState(videos, null);
     return videos;
+  }
+
+  /**
+   * Saves new custom Sobre image DataURL & syncs to cloud
+   */
+  function saveAboutImage(dataUrl) {
+    saveState(null, dataUrl);
   }
 
   /**
@@ -241,29 +296,6 @@ const StorageEngine = (() => {
     return Array.from(tagSet);
   }
 
-  /**
-   * Retrieves custom Sobre Nós image URL or returns default
-   */
-  const ABOUT_IMG_KEY = 'novel_about_image_v1';
-  const DEFAULT_ABOUT_IMG = 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80';
-
-  function getAboutImage() {
-    try {
-      const stored = localStorage.getItem(ABOUT_IMG_KEY);
-      return stored || DEFAULT_ABOUT_IMG;
-    } catch (e) {
-      return DEFAULT_ABOUT_IMG;
-    }
-  }
-
-  function saveAboutImage(dataUrl) {
-    try {
-      localStorage.setItem(ABOUT_IMG_KEY, dataUrl);
-    } catch (e) {
-      console.error('Error saving about image:', e);
-    }
-  }
-
   return {
     getVideos,
     addVideo,
@@ -274,6 +306,6 @@ const StorageEngine = (() => {
     extractYouTubeId,
     getAboutImage,
     saveAboutImage,
-    fetchCloudVideos
+    fetchCloudState
   };
 })();
