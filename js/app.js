@@ -268,8 +268,20 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
 
+      function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+               ('ontouchstart' in window && window.innerWidth <= 800);
+      }
+
       const thumbWrapper = card.querySelector('.thumb-wrapper');
-      thumbWrapper.onclick = () => CustomPlayer.openPlayer(video);
+      thumbWrapper.onclick = () => {
+        if (isMobileDevice()) {
+          const ytUrl = `https://www.youtube.com/watch?v=${video.youtubeId}`;
+          window.location.href = ytUrl;
+        } else {
+          CustomPlayer.openPlayer(video);
+        }
+      };
 
       if (isAdmin) {
         const editBtn = card.querySelector('.btn-edit');
