@@ -777,14 +777,17 @@ document.addEventListener('DOMContentLoaded', () => {
           isDiscount: true
         });
       } else if (diffBrl > 0.01) {
-        const customAdjustVal = diffBrl;
-        const customAdjustDisplay = currency === 'USD' ? (customAdjustVal / usdToBrlRate) : customAdjustVal;
-        itemizedServices.push({
-          name: 'Ajuste / Personalizado',
-          price: customAdjustVal,
-          displayPrice: customAdjustDisplay,
-          isCustomAdjust: true
-        });
+        const customItem = itemizedServices.find(s => s.name.startsWith('Personalizado'));
+        if (customItem) {
+          customItem.price = diffBrl;
+          customItem.displayPrice = currency === 'USD' ? (diffBrl / usdToBrlRate) : diffBrl;
+        } else {
+          itemizedServices.push({
+            name: 'Personalizado',
+            price: diffBrl,
+            displayPrice: currency === 'USD' ? (diffBrl / usdToBrlRate) : diffBrl
+          });
+        }
       }
 
       packagesData.push({
