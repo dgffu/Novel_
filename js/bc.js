@@ -701,7 +701,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (brand === 'giffu') {
       brandColor = '#FD5E01';
-      brandFooter = 'Dilan Giffú · Motion Artist & Filmmaker · dilan@novel.art.br';
+      brandFooter = 'Dilan Giffú · Motion Artist & Filmmaker · Portfólio: giffu.com.br';
       brandTitle = 'GIFFÚ';
     }
 
@@ -896,7 +896,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const brandColor = proposal.brandColor || (proposal.brand === 'giffu' ? '#FD5E01' : '#EE7000');
     const brandFooter = proposal.brandFooter || (proposal.brand === 'giffu'
-      ? 'Dilan Giffú · Motion Artist & Filmmaker · dilan@novel.art.br'
+      ? 'Dilan Giffú · Motion Artist & Filmmaker · Portfólio: giffu.com.br'
       : 'Novel Produtora Audiovisual · novel.art.br · adm@novel.art.br');
     const brandTagTitle = proposal.brand === 'giffu' ? 'PROPOSTA COMERCIAL • GIFFÚ' : 'PROPOSTA COMERCIAL';
 
