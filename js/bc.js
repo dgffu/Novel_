@@ -32,35 +32,72 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnAddPackage = document.getElementById('bc-btn-add-package');
   const btnSaveDraft = document.getElementById('bc-btn-save-draft');
 
-  // Exact Services List & Colored Badge Classes (Matching User's Image 2)
+  // Exact Services List & Prices (Matching User Specification)
   const SERVICE_ITEMS = [
-    { name: 'Same-Day / Realtime', cls: 'svc-red' },
-    { name: 'Aftermovie', cls: 'svc-peach' },
-    { name: 'Institucional', cls: 'svc-grey' },
-    { name: 'Trailer', cls: 'svc-grey' },
-    { name: 'Mini 30s', cls: 'svc-pink' },
-    { name: 'Mini 1min', cls: 'svc-pink' },
-    { name: 'Mini 1m30', cls: 'svc-pink' },
-    { name: 'Vários Reels', cls: 'svc-pink' },
-    { name: 'Ensaio/PW Teaser', cls: 'svc-mint' },
-    { name: 'Love Story', cls: 'svc-mint' },
-    { name: 'Teaser Festa', cls: 'svc-mint' },
-    { name: 'Short Film 7min', cls: 'svc-gold' },
-    { name: 'Short Film 10m', cls: 'svc-gold' },
-    { name: 'Short Film 15min', cls: 'svc-gold' },
-    { name: 'Short Film 20min', cls: 'svc-gold' },
-    { name: 'Film 30min', cls: 'svc-gold' },
-    { name: 'Cerimônia', cls: 'svc-tan' },
-    { name: 'Motion Graphics', cls: 'svc-blue' },
-    { name: 'Design/ID', cls: 'svc-blue' },
-    { name: 'Foto Evento', cls: 'svc-grey' },
-    { name: 'Captação Evento', cls: 'svc-grey' },
-    { name: 'Foto Ensaio', cls: 'svc-grey' },
-    { name: 'Captação Ensaio', cls: 'svc-grey' },
-    { name: 'Drone Evento', cls: 'svc-grey' },
-    { name: 'Drone Ensaio', cls: 'svc-grey' },
-    { name: 'Produção Completa', cls: 'svc-purple' }
+    { id: 'same_day', name: 'Same-Day / Realtime', price: 700, cls: 'svc-red' },
+    { id: 'aftermovie', name: 'Aftermovie', price: 700, cls: 'svc-peach' },
+    { id: 'institucional', name: 'Institucional', price: 700, cls: 'svc-grey' },
+    { id: 'trailer', name: 'Trailer', price: 600, cls: 'svc-grey' },
+    { id: 'mini_30s', name: 'Mini 30s', price: 180, cls: 'svc-pink' },
+    { id: 'mini_1min', name: 'Mini 1min', price: 240, cls: 'svc-pink' },
+    { id: 'mini_1m30', name: 'Mini 1m30', price: 330, cls: 'svc-pink' },
+    { id: 'reels', name: 'Vários Reels', type: 'reels', cls: 'svc-pink' },
+    { id: 'ensaio_pw', name: 'Ensaio/PW Teaser', price: 400, cls: 'svc-mint' },
+    { id: 'love_story', name: 'Love Story', price: 600, cls: 'svc-mint' },
+    { id: 'teaser_festa', name: 'Teaser Festa', price: 400, cls: 'svc-mint' },
+    { id: 'short_7min', name: 'Short Film 7min', price: 700, cls: 'svc-gold' },
+    { id: 'short_10min', name: 'Short Film 10m', price: 850, cls: 'svc-gold' },
+    { id: 'short_15min', name: 'Short Film 15min', price: 940, cls: 'svc-gold' },
+    { id: 'short_20min', name: 'Short Film 20min', price: 1200, cls: 'svc-gold' },
+    { id: 'film_30min', name: 'Film 30min', price: 1600, cls: 'svc-gold' },
+    { id: 'cerimonia', name: 'Cerimônia', price: 800, cls: 'svc-tan' },
+    { id: 'motion', name: 'Motion Graphics', type: 'motion', cls: 'svc-blue' },
+    { id: 'design_id', name: 'Design/ID', price: 700, cls: 'svc-blue' },
+    { id: 'foto_evento', name: 'Foto Evento', price: 1200, cls: 'svc-grey' },
+    { id: 'captacao_evento', name: 'Captação Evento', price: 1600, cls: 'svc-grey' },
+    { id: 'foto_ensaio', name: 'Foto Ensaio', price: 800, cls: 'svc-grey' },
+    { id: 'captacao_ensaio', name: 'Captação Ensaio', price: 900, cls: 'svc-grey' },
+    { id: 'drone_evento', name: 'Drone Evento', price: 600, cls: 'svc-grey' },
+    { id: 'drone_ensaio', name: 'Drone Ensaio', price: 400, cls: 'svc-grey' },
+    { id: 'producao_completa', name: 'Produção Completa', price: 3890, cls: 'svc-purple' }
   ];
+
+  function calculateReelsPrice(qty) {
+    const q = Math.max(1, parseInt(qty) || 1);
+    let total = 0;
+    let label = '';
+    if (q === 1) {
+      total = 300;
+      label = '1 Reel';
+    } else if (q === 2) {
+      total = 500;
+      label = '2 Reels';
+    } else if (q >= 10) {
+      total = q * 160;
+      label = `${q} Reels`;
+    } else {
+      total = q * 200;
+      label = `${q} Reels`;
+    }
+    return { total, label, qty: q };
+  }
+
+  function calculateMotionPrice(mins) {
+    const m = Math.max(1, parseInt(mins) || 1);
+    let total = 0;
+    let label = '';
+    if (m === 1) {
+      total = 400;
+      label = 'Motion Graphics (1 min)';
+    } else if (m === 2) {
+      total = 600;
+      label = 'Motion Graphics (2 min)';
+    } else {
+      total = m * 250;
+      label = `Motion Graphics (${m} min)`;
+    }
+    return { total, label, mins: m };
+  }
 
   /* ==========================================================================
      1. INITIALIZATION & ROUTING
@@ -412,12 +449,39 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="bc-form-group">
           <label>Serviços <span class="required-star">*</span></label>
           <div class="bc-checkbox-grid">
-            ${SERVICE_ITEMS.map((item) => `
-              <label class="bc-checkbox-item ${item.cls}">
-                <input type="checkbox" name="${pkgId}-service" value="${item.name}" onchange="NovelBC.updatePackageSummary('${pkgId}')">
-                <span>${item.name}</span>
-              </label>
-            `).join('')}
+            ${SERVICE_ITEMS.map((item) => {
+              if (item.type === 'reels') {
+                return `
+                  <div class="bc-service-item-wrapper">
+                    <label class="bc-checkbox-item ${item.cls}">
+                      <input type="checkbox" id="${pkgId}-reels-check" name="${pkgId}-service" value="${item.name}" onchange="NovelBC.recalculatePackageSum('${pkgId}')">
+                      <span>${item.name}</span>
+                    </label>
+                    <div class="bc-service-qty-box" id="${pkgId}-reels-qty-box">
+                      <span>Qtd Reels:</span>
+                      <input type="number" min="1" value="1" id="${pkgId}-reels-qty" oninput="NovelBC.recalculatePackageSum('${pkgId}')">
+                    </div>
+                  </div>`;
+              } else if (item.type === 'motion') {
+                return `
+                  <div class="bc-service-item-wrapper">
+                    <label class="bc-checkbox-item ${item.cls}">
+                      <input type="checkbox" id="${pkgId}-motion-check" name="${pkgId}-service" value="${item.name}" onchange="NovelBC.recalculatePackageSum('${pkgId}')">
+                      <span>${item.name}</span>
+                    </label>
+                    <div class="bc-service-qty-box" id="${pkgId}-motion-qty-box">
+                      <span>Minutos Motion:</span>
+                      <input type="number" min="1" value="1" id="${pkgId}-motion-mins" oninput="NovelBC.recalculatePackageSum('${pkgId}')">
+                    </div>
+                  </div>`;
+              } else {
+                return `
+                  <label class="bc-checkbox-item ${item.cls}">
+                    <input type="checkbox" name="${pkgId}-service" value="${item.name}" onchange="NovelBC.recalculatePackageSum('${pkgId}')">
+                    <span>${item.name}</span>
+                  </label>`;
+              }
+            }).join('')}
             <label class="bc-checkbox-item svc-purple">
               <input type="checkbox" id="${pkgId}-custom-check" name="${pkgId}-service" value="Personalizado" onchange="NovelBC.toggleCustomText('${pkgId}')">
               <span>Personalizado</span>
@@ -435,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="bc-form-group">
             <label for="${pkgId}-amount">Investimento <span class="required-star">*</span></label>
             <div class="bc-currency-input-group">
-              <select id="${pkgId}-currency" class="bc-select bc-currency-select" onchange="NovelBC.updateCurrencyConversion('${pkgId}')">
+              <select id="${pkgId}-currency" class="bc-select bc-currency-select" onchange="NovelBC.recalculatePackageSum('${pkgId}')">
                 <option value="BRL">R$</option>
                 <option value="USD">US$</option>
               </select>
@@ -461,6 +525,62 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>`;
 
     packagesContainer.appendChild(card);
+    updatePackageSummary(pkgId);
+  }
+
+  function recalculatePackageSum(pkgId) {
+    const card = document.getElementById(pkgId);
+    if (!card) return;
+
+    // Reels Quantity Box Toggle
+    const reelsCheck = document.getElementById(`${pkgId}-reels-check`);
+    const reelsQtyBox = document.getElementById(`${pkgId}-reels-qty-box`);
+    if (reelsCheck && reelsQtyBox) {
+      if (reelsCheck.checked) reelsQtyBox.classList.add('active');
+      else reelsQtyBox.classList.remove('active');
+    }
+
+    // Motion Quantity Box Toggle
+    const motionCheck = document.getElementById(`${pkgId}-motion-check`);
+    const motionQtyBox = document.getElementById(`${pkgId}-motion-qty-box`);
+    if (motionCheck && motionQtyBox) {
+      if (motionCheck.checked) motionQtyBox.classList.add('active');
+      else motionQtyBox.classList.remove('active');
+    }
+
+    // Calculate Sum
+    let sumInBrl = 0;
+    const checkedBoxes = Array.from(document.querySelectorAll(`input[name="${pkgId}-service"]:checked`));
+
+    checkedBoxes.forEach(cb => {
+      if (cb.value === 'Vários Reels') {
+        const qty = parseInt(document.getElementById(`${pkgId}-reels-qty`)?.value) || 1;
+        sumInBrl += calculateReelsPrice(qty).total;
+      } else if (cb.value === 'Motion Graphics') {
+        const mins = parseInt(document.getElementById(`${pkgId}-motion-mins`)?.value) || 1;
+        sumInBrl += calculateMotionPrice(mins).total;
+      } else if (cb.value !== 'Personalizado') {
+        const itemObj = SERVICE_ITEMS.find(s => s.name === cb.value);
+        if (itemObj && itemObj.price) {
+          sumInBrl += itemObj.price;
+        }
+      }
+    });
+
+    const currencySelect = document.getElementById(`${pkgId}-currency`);
+    const amountInput = document.getElementById(`${pkgId}-amount`);
+    const isUsd = currencySelect?.value === 'USD';
+
+    let displayAmount = sumInBrl;
+    if (isUsd) {
+      displayAmount = usdToBrlRate > 0 ? (sumInBrl / usdToBrlRate) : sumInBrl;
+    }
+
+    if (amountInput) {
+      amountInput.value = displayAmount > 0 ? displayAmount.toFixed(2) : '';
+    }
+
+    updateCurrencyConversion(pkgId);
     updatePackageSummary(pkgId);
   }
 
@@ -605,15 +725,33 @@ document.addEventListener('DOMContentLoaded', () => {
       const packageNameInput = document.getElementById(`${pkgId}-name-input`);
       const packageName = packageNameInput?.value.trim() || `Pacote ${String(i + 1).padStart(2, '0')}`;
 
+      let sumItemizedBrl = 0;
+      const itemizedServices = [];
       const checkedBoxes = Array.from(document.querySelectorAll(`input[name="${pkgId}-service"]:checked`));
-      const services = checkedBoxes.map(cb => {
-        if (cb.value === 'Personalizado') {
+
+      checkedBoxes.forEach(cb => {
+        if (cb.value === 'Vários Reels') {
+          const qty = parseInt(document.getElementById(`${pkgId}-reels-qty`)?.value) || 1;
+          const res = calculateReelsPrice(qty);
+          itemizedServices.push({ name: res.label, price: res.total });
+          sumItemizedBrl += res.total;
+        } else if (cb.value === 'Motion Graphics') {
+          const mins = parseInt(document.getElementById(`${pkgId}-motion-mins`)?.value) || 1;
+          const res = calculateMotionPrice(mins);
+          itemizedServices.push({ name: res.label, price: res.total });
+          sumItemizedBrl += res.total;
+        } else if (cb.value === 'Personalizado') {
           const customText = document.getElementById(`${pkgId}-custom-text`)?.value.trim();
-          return customText ? `Personalizado: ${customText}` : 'Personalizado';
+          itemizedServices.push({ name: customText ? `Personalizado: ${customText}` : 'Personalizado', price: 0 });
+        } else {
+          const itemObj = SERVICE_ITEMS.find(s => s.name === cb.value);
+          const price = itemObj?.price || 0;
+          itemizedServices.push({ name: cb.value, price: price });
+          sumItemizedBrl += price;
         }
-        return cb.value;
       });
 
+      const services = itemizedServices.map(s => s.name);
       const currency = document.getElementById(`${pkgId}-currency`).value;
       const amount = parseFloat(document.getElementById(`${pkgId}-amount`).value);
       const deadline = document.getElementById(`${pkgId}-deadline`).value;
@@ -627,10 +765,33 @@ document.addEventListener('DOMContentLoaded', () => {
         convertedBrl = amount * usdToBrlRate;
       }
 
+      // Check difference for Discount or Custom Increase
+      const diffBrl = convertedBrl - sumItemizedBrl;
+      if (diffBrl < -0.01) {
+        const discountVal = Math.abs(diffBrl);
+        const discountDisplay = currency === 'USD' ? (discountVal / usdToBrlRate) : discountVal;
+        itemizedServices.push({
+          name: 'Desconto',
+          price: -discountVal,
+          displayPrice: -discountDisplay,
+          isDiscount: true
+        });
+      } else if (diffBrl > 0.01) {
+        const customAdjustVal = diffBrl;
+        const customAdjustDisplay = currency === 'USD' ? (customAdjustVal / usdToBrlRate) : customAdjustVal;
+        itemizedServices.push({
+          name: 'Ajuste / Personalizado',
+          price: customAdjustVal,
+          displayPrice: customAdjustDisplay,
+          isCustomAdjust: true
+        });
+      }
+
       packagesData.push({
         packageNumber: i + 1,
         packageName: packageName,
         services: services,
+        itemizedServices: itemizedServices,
         currency: currency,
         amount: amount,
         convertedBrl: convertedBrl,
@@ -754,6 +915,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const displayName = pkg.packageName || `Pacote ${String(pkg.packageNumber).padStart(2, '0')}`;
       const deadlineText = pkg.deadline ? `<span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">Prazo: ${formatDateToBR(pkg.deadline)}</span>` : '';
 
+      const itemsList = pkg.itemizedServices || pkg.services.map(s => ({ name: s, price: 0 }));
+
       return `
         <div class="proposal-package-view" style="border-top: 3px solid ${brandColor};">
           <h3>
@@ -761,15 +924,32 @@ document.addEventListener('DOMContentLoaded', () => {
             ${deadlineText}
           </h3>
 
-          <ul class="proposal-services-list">
-            ${pkg.services.map(s => `
-              <li>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${brandColor}" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <span>${s}</span>
-              </li>
-            `).join('')}
+          <ul class="proposal-services-list" style="display: flex; flex-direction: column; gap: 0.65rem;">
+            ${itemsList.map(s => {
+              const symbol = pkg.currency === 'USD' ? 'US$' : 'R$';
+              let priceBadge = '';
+              if (s.isDiscount) {
+                const val = Math.abs(s.displayPrice || s.price);
+                priceBadge = `<span style="color: #d9534f; font-weight: 700; margin-left: auto;">-${symbol} ${formatNumber(val)}</span>`;
+              } else if (s.isCustomAdjust) {
+                const val = s.displayPrice || s.price;
+                priceBadge = `<span style="color: var(--primary); font-weight: 700; margin-left: auto;">+${symbol} ${formatNumber(val)}</span>`;
+              } else if (s.price > 0) {
+                const val = pkg.currency === 'USD' ? (s.price / (proposal.exchangeRate || usdToBrlRate)) : s.price;
+                priceBadge = `<span style="font-weight: 700; margin-left: auto; color: var(--dark-slate);">${symbol} ${formatNumber(val)}</span>`;
+              }
+
+              return `
+                <li style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; border-bottom: 1px dashed rgba(64,64,64,0.12); padding-bottom: 0.45rem;">
+                  <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${brandColor}" stroke-width="2">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span style="font-weight: 500;">${escapeHtml(s.name)}</span>
+                  </div>
+                  ${priceBadge}
+                </li>`;
+            }).join('')}
           </ul>
 
           <div class="proposal-investment-box" style="border-top-color: ${brandColor};">
@@ -916,6 +1096,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleCustomText,
     updateCurrencyConversion,
     updatePackageSummary,
+    recalculatePackageSum,
     downloadPdf
   };
 

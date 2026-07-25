@@ -389,6 +389,41 @@
   line-height: 1.2;
 }
 
+.bc-service-item-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bc-service-qty-box {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.4rem 0.65rem;
+  background: #FFFFFF;
+  border: 1px solid rgba(64, 64, 64, 0.25);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--dark-slate);
+}
+
+.bc-service-qty-box.active {
+  display: flex;
+}
+
+.bc-service-qty-box input[type="number"] {
+  width: 70px;
+  height: 32px;
+  padding: 0 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 1px solid rgba(64, 64, 64, 0.25);
+  border-radius: var(--radius-sm);
+  background: #FAFAFA;
+}
+
 .bc-checkbox-item input[type="checkbox"] {
   width: 16px;
   height: 16px;
