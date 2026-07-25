@@ -781,12 +781,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (customItem) {
           customItem.price = diffBrl;
           customItem.displayPrice = currency === 'USD' ? (diffBrl / usdToBrlRate) : diffBrl;
-        } else {
-          itemizedServices.push({
-            name: 'Personalizado',
-            price: diffBrl,
-            displayPrice: currency === 'USD' ? (diffBrl / usdToBrlRate) : diffBrl
-          });
         }
       }
 
