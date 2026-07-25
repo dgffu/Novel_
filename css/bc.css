@@ -47,8 +47,19 @@
   text-transform: uppercase;
   background: var(--dark-slate);
   color: #fff;
-  padding: 2px 8px;
+  padding: 4px 10px;
   border-radius: var(--radius-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+}
+
+.bc-badge:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 .bc-header-actions {
