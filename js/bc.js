@@ -773,24 +773,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
 
     proposalView.innerHTML = `
+      <!-- Action Bar (Web Only, Excluded from PDF) -->
+      <div class="no-print" style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+        <button type="button" id="bc-btn-download-pdf" class="bc-btn bc-btn-primary" style="background-color: ${brandColor};" onclick="NovelBC.downloadPdf()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Baixar PDF
+        </button>
+      </div>
+
+      <!-- Printable Proposal Container (PDF Export Target) -->
       <div id="proposal-printable-area">
         <!-- Hero Card -->
         <div class="proposal-header-hero">
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-            <div>
-              <span style="font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: ${brandColor}; font-weight: 700;">${brandTagTitle}</span>
-              <h1 style="font-size: 2.2rem; color: #fff; margin-top: 0.25rem;">${escapeHtml(proposal.project)}</h1>
-            </div>
-            <div class="no-print" data-html2canvas-ignore="true">
-              <button type="button" id="bc-btn-download-pdf" class="bc-btn bc-btn-primary" style="background-color: ${brandColor};" onclick="NovelBC.downloadPdf()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Baixar PDF
-              </button>
-            </div>
+          <div>
+            <span style="font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: ${brandColor}; font-weight: 700;">${brandTagTitle}</span>
+            <h1 style="font-size: 2.2rem; color: #fff; margin-top: 0.25rem;">${escapeHtml(proposal.project)}</h1>
           </div>
 
           <div class="proposal-meta-grid">
@@ -830,13 +831,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const opt = {
       margin:       [10, 10, 10, 10],
-      filename:     `Orçamento_${slugify(clientInput.value || 'Cliente')}.pdf`,
+      filename:     `Orçamento_${Date.now()}.pdf`,
       image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  {
-        scale: 2,
-        useCORS: true,
-        ignoreElements: (el) => el.classList.contains('no-print') || el.hasAttribute('data-html2canvas-ignore')
-      },
+      html2canvas:  { scale: 2, useCORS: true },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
