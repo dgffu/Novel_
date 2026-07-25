@@ -701,7 +701,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (brand === 'giffu') {
       brandColor = '#FD5E01';
-      brandFooter = 'Dilan Giffú · Motion Artist & Filmmaker · Portfólio: giffu.com.br';
+      brandFooter = 'Dilan Giffú · Motion Artist & Filmmaker · Portfólio: https://giffu.com.br';
       brandTitle = 'GIFFÚ';
     }
 
@@ -1004,7 +1004,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- Brand Footer Note -->
         <div style="text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: var(--border-fine); color: var(--text-muted); font-size: 0.85rem;">
-          <p>${escapeHtml(brandFooter)}</p>
+          <p>
+            ${proposal.brand === 'giffu'
+              ? `Dilan Giffú · Motion Artist & Filmmaker · Portfólio: <a href="https://giffu.com.br" target="_blank" style="color: ${brandColor}; text-decoration: underline; font-weight: 600;">https://giffu.com.br</a>`
+              : `Novel Produtora Audiovisual · <a href="https://novel.art.br" target="_blank" style="color: ${brandColor}; text-decoration: underline; font-weight: 600;">novel.art.br</a> · <a href="mailto:adm@novel.art.br" style="color: inherit; text-decoration: underline;">adm@novel.art.br</a>`
+            }
+          </p>
         </div>
       </div>`;
   }
