@@ -7,6 +7,9 @@
 const StorageEngine = (() => {
   const STORAGE_VIDEOS_KEY = 'novel_portfolio_videos_v1';
   const STORAGE_ABOUT_KEY = 'novel_about_image_v1';
+  const STORAGE_CLIENTS_KEY = 'novel_clients_list_v1';
+  const STORAGE_PROJECTS_KEY = 'novel_projects_list_v1';
+  const STORAGE_PROPOSALS_KEY = 'novel_proposals_v1';
   const CLOUD_ENDPOINT = 'https://jsonblob.com/api/jsonBlob/019f954d-319b-742c-8943-5f73c3b107a8';
 
   const DEFAULT_ABOUT_IMG = 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80';
@@ -108,30 +111,136 @@ const StorageEngine = (() => {
   }
 
   /**
-   * Saves updated videos & about image to LocalStorage AND syncs to Cloud
+   * Retrieves clients list
+   */
+  function getClients() {
+    try {
+      const stored = localStorage.getItem(STORAGE_CLIENTS_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /**
+   * Adds a new client name to storage if not already present
+   */
+  function saveClient(clientName) {
+    if (!clientName || !clientName.trim()) return;
+    const cleanName = SecurityEngine.sanitizeInput(clientName.trim());
+    const clients = getClients();
+    if (!clients.includes(cleanName)) {
+      clients.push(cleanName);
+      clients.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      localStorage.setItem(STORAGE_CLIENTS_KEY, JSON.stringify(clients));
+      saveState();
+    }
+  }
+
+  /**
+   * Retrieves projects list
+   */
+  function getProjects() {
+    try {
+      const stored = localStorage.getItem(STORAGE_PROJECTS_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /**
+   * Adds a new project name to storage if not already present
+   */
+  function saveProject(projectName) {
+    if (!projectName || !projectName.trim()) return;
+    const cleanName = SecurityEngine.sanitizeInput(projectName.trim());
+    const projects = getProjects();
+    if (!projects.includes(cleanName)) {
+      projects.push(cleanName);
+      projects.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      localStorage.setItem(STORAGE_PROJECTS_KEY, JSON.stringify(projects));
+      saveState();
+    }
+  }
+
+  /**
+   * Retrieves proposals map
+   */
+  function getProposals() {
+    try {
+      const stored = localStorage.getItem(STORAGE_PROPOSALS_KEY);
+      return stored ? JSON.parse(stored) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  /**
+   * Gets a specific proposal by slug (e.g. "cliente-slug/projeto-slug")
+   */
+  function getProposalBySlug(slug) {
+    if (!slug) return null;
+    const proposals = getProposals();
+    // Normalize slug search
+    const normalizedKey = slug.toLowerCase().trim().replace(/^\/+|\/+$/g, '');
+    return proposals[normalizedKey] || null;
+  }
+
+  /**
+   * Saves or updates a proposal object by slug
+   */
+  function saveProposal(proposalData) {
+    if (!proposalData || !proposalData.slug) return;
+    const proposals = getProposals();
+    const normalizedKey = proposalData.slug.toLowerCase().trim().replace(/^\/+|\/+$/g, '');
+    proposals[normalizedKey] = {
+      ...proposalData,
+      updatedAt: Date.now()
+    };
+    localStorage.setItem(STORAGE_PROPOSALS_KEY, JSON.stringify(proposals));
+
+    // Also auto-save client and project name
+    if (proposalData.client) saveClient(proposalData.client);
+    if (proposalData.project) saveProject(proposalData.project);
+
+    saveState();
+  }
+
+  /**
+   * Saves updated videos, about image, clients, projects, & proposals to LocalStorage AND syncs to Cloud
    */
   function saveState(videos = null, aboutImage = null) {
     const currentVideos = videos || getVideos();
     const currentAbout = aboutImage || getAboutImage();
+    const currentClients = getClients();
+    const currentProjects = getProjects();
+    const currentProposals = getProposals();
 
     try {
       localStorage.setItem(STORAGE_VIDEOS_KEY, JSON.stringify(currentVideos));
       localStorage.setItem(STORAGE_ABOUT_KEY, currentAbout);
+      localStorage.setItem(STORAGE_CLIENTS_KEY, JSON.stringify(currentClients));
+      localStorage.setItem(STORAGE_PROJECTS_KEY, JSON.stringify(currentProjects));
+      localStorage.setItem(STORAGE_PROPOSALS_KEY, JSON.stringify(currentProposals));
     } catch (e) {
       console.error('Error writing to local storage:', e);
     }
 
-    syncToCloud(currentVideos, currentAbout);
+    syncToCloud(currentVideos, currentAbout, currentClients, currentProjects, currentProposals);
   }
 
   /**
-   * Syncs videos & about image state to Cloud JSON endpoint
+   * Syncs state to Cloud JSON endpoint
    */
-  async function syncToCloud(videos, aboutImage) {
+  async function syncToCloud(videos, aboutImage, clients = null, projects = null, proposals = null) {
     try {
       const payload = {
-        videos: videos,
-        aboutImage: aboutImage,
+        videos: videos || getVideos(),
+        aboutImage: aboutImage || getAboutImage(),
+        clients: clients || getClients(),
+        projects: projects || getProjects(),
+        proposals: proposals || getProposals(),
         updatedAt: Date.now()
       };
 
@@ -159,12 +268,18 @@ const StorageEngine = (() => {
       const cloudData = await res.json();
       let cloudVideos = null;
       let cloudAbout = null;
+      let cloudClients = null;
+      let cloudProjects = null;
+      let cloudProposals = null;
 
       if (Array.isArray(cloudData)) {
         cloudVideos = cloudData;
       } else if (cloudData && typeof cloudData === 'object') {
         if (Array.isArray(cloudData.videos)) cloudVideos = cloudData.videos;
         if (cloudData.aboutImage) cloudAbout = cloudData.aboutImage;
+        if (Array.isArray(cloudData.clients)) cloudClients = cloudData.clients;
+        if (Array.isArray(cloudData.projects)) cloudProjects = cloudData.projects;
+        if (cloudData.proposals && typeof cloudData.proposals === 'object') cloudProposals = cloudData.proposals;
       }
 
       let stateChanged = false;
@@ -182,6 +297,33 @@ const StorageEngine = (() => {
         const localAbout = localStorage.getItem(STORAGE_ABOUT_KEY);
         if (localAbout !== cloudAbout) {
           localStorage.setItem(STORAGE_ABOUT_KEY, cloudAbout);
+          stateChanged = true;
+        }
+      }
+
+      if (cloudClients) {
+        const localClientsStr = localStorage.getItem(STORAGE_CLIENTS_KEY);
+        const cloudClientsStr = JSON.stringify(cloudClients);
+        if (localClientsStr !== cloudClientsStr) {
+          localStorage.setItem(STORAGE_CLIENTS_KEY, cloudClientsStr);
+          stateChanged = true;
+        }
+      }
+
+      if (cloudProjects) {
+        const localProjectsStr = localStorage.getItem(STORAGE_PROJECTS_KEY);
+        const cloudProjectsStr = JSON.stringify(cloudProjects);
+        if (localProjectsStr !== cloudProjectsStr) {
+          localStorage.setItem(STORAGE_PROJECTS_KEY, cloudProjectsStr);
+          stateChanged = true;
+        }
+      }
+
+      if (cloudProposals) {
+        const localProposalsStr = localStorage.getItem(STORAGE_PROPOSALS_KEY);
+        const cloudProposalsStr = JSON.stringify(cloudProposals);
+        if (localProposalsStr !== cloudProposalsStr) {
+          localStorage.setItem(STORAGE_PROPOSALS_KEY, cloudProposalsStr);
           stateChanged = true;
         }
       }
@@ -306,6 +448,13 @@ const StorageEngine = (() => {
     extractYouTubeId,
     getAboutImage,
     saveAboutImage,
+    getClients,
+    saveClient,
+    getProjects,
+    saveProject,
+    getProposals,
+    getProposalBySlug,
+    saveProposal,
     fetchCloudState
   };
 })();

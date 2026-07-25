@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novel | Budget Center</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../favicon.png">
+
+  <!-- Google Fonts Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/bc.css?v=2.0">
+
+  <!-- html2pdf Bundle for Compact PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bc-body">
+
+  <!-- Filmic Grain Texture -->
+  <div class="vintage-overlay"></div>
+
+  <!-- Budget Center Header -->
+  <header class="bc-header">
+    <div class="container bc-header-content">
+      <div class="bc-brand">
+        <a href="../index.html" title="Ir para o site principal">
+          <img src="../assets/logo.png" alt="Novel">
+        </a>
+        <span class="bc-badge">Budget Center</span>
+      </div>
+
+      <div class="bc-header-actions no-print" id="bc-header-actions">
+        <!-- Dynamic header actions (Logout / Nav) inserted via JS -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container" style="padding-top: 2rem; padding-bottom: 4rem; flex: 1;">
+
+    <!-- Alert Container -->
+    <div id="bc-global-alert" style="display: none;"></div>
+
+    <!-- ================= 1. LOGIN VIEW ================= -->
+    <div id="bc-login-view" class="bc-login-wrapper" style="display: none;">
+      <div class="bc-card bc-login-card">
+        <h2>Área Restrita</h2>
+        <p>Faça login para acessar o Gerador de Orçamento da Novel.</p>
+        
+        <form id="bc-login-form">
+          <div class="bc-form-group">
+            <label for="bc-user-input">Usuário</label>
+            <input type="text" id="bc-user-input" class="bc-input" placeholder="Digite seu usuário..." required autocomplete="username">
+          </div>
+
+          <div class="bc-form-group">
+            <label for="bc-pass-input">Senha</label>
+            <input type="password" id="bc-pass-input" class="bc-input" placeholder="Digite sua senha..." required autocomplete="current-password">
+          </div>
+
+          <button type="submit" class="bc-btn bc-btn-primary" style="width: 100%; margin-top: 1rem;">
+            Entrar no Budget Center
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= 2. GERADOR DE ORÇAMENTO VIEW ================= -->
+    <div id="bc-generator-view" style="display: none;">
+      <div class="bc-card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; border-bottom: var(--border-fine); padding-bottom: 1rem;">
+          <div>
+            <h1 style="font-size: 2rem;">Gerador de Orçamento</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Preencha os campos abaixo para compilar o orçamento do cliente.</p>
+          </div>
+          <span style="font-size: 0.8rem; color: var(--text-muted);"><span class="required-star" style="color: var(--primary);">*</span> Todos os campos são obrigatórios</span>
+        </div>
+
+        <form id="bc-budget-form">
+
+          <!-- Brand Selector Row -->
+          <div class="bc-brand-selector-row" style="margin-bottom: 1.75rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid rgba(64,64,64,0.1); padding-bottom: 1rem;">
+            <label style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--dark-slate);">Orçamento <span class="required-star" style="color: var(--primary);">*</span></label>
+            <div class="bc-brand-radio-group">
+              <label class="bc-brand-radio-item active" id="brand-label-novel">
+                <input type="radio" name="bc-brand" value="novel" checked onchange="NovelBC.onBrandChange('novel')">
+                <span>Novel</span>
+              </label>
+              <label class="bc-brand-radio-item" id="brand-label-giffu">
+                <input type="radio" name="bc-brand" value="giffu" onchange="NovelBC.onBrandChange('giffu')">
+                <span>Giffú</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Global Details Single-Row Layout -->
+          <div class="bc-top-controls-row">
+            
+            <!-- Cliente Combobox -->
+            <div class="bc-form-group bc-col-client">
+              <label for="bc-client-input">Cliente <span class="required-star">*</span></label>
+              <input type="text" id="bc-client-input" list="bc-clients-datalist" class="bc-input" placeholder="Selecione ou digite um novo cliente..." required>
+              <datalist id="bc-clients-datalist">
+                <!-- Populated dynamically via JS -->
+              </datalist>
+            </div>
+
+            <!-- Data do Orçamento -->
+            <div class="bc-form-group bc-col-date">
+              <label for="bc-date-input">Data <span class="required-star">*</span></label>
+              <input type="date" id="bc-date-input" class="bc-input" required>
+            </div>
+
+            <!-- Nome do Projeto + Botão Salvar (Ícone apenas) -->
+            <div class="bc-form-group bc-col-project">
+              <label for="bc-project-input">Nome do Projeto <span class="required-star">*</span></label>
+              <div style="display: flex; gap: 0.5rem; width: 100%;">
+                <input type="text" id="bc-project-input" list="bc-projects-datalist" class="bc-input" placeholder="Selecione ou digite um novo projeto..." required>
+                <datalist id="bc-projects-datalist">
+                  <!-- Populated dynamically via JS -->
+                </datalist>
+                <button type="button" id="bc-btn-save-draft" class="bc-btn bc-btn-secondary bc-btn-icon-only" title="Salvar Informações">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Validade da Proposta -->
+            <div class="bc-form-group bc-col-date">
+              <label for="bc-expiration-input">Validade da proposta <span class="required-star">*</span></label>
+              <input type="date" id="bc-expiration-input" class="bc-input" required>
+            </div>
+
+          </div>
+
+          <!-- Section Divider -->
+          <div style="border-top: var(--border-fine); margin: 2rem 0; padding-top: 1.5rem;">
+            <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Pacotes de Serviços</h3>
+          </div>
+
+          <!-- Packages Container (Pacote 01, Pacote 02, ...) -->
+          <div id="bc-packages-container">
+            <!-- Populated via JS -->
+          </div>
+
+          <!-- Add Package Button -->
+          <button type="button" id="bc-btn-add-package" class="bc-btn bc-btn-dashed" style="margin-bottom: 2.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Adicionar Pacote
+          </button>
+
+          <!-- Requisitar / Compile Proposal Button -->
+          <div style="text-align: right; border-top: var(--border-fine); padding-top: 2rem;">
+            <button type="submit" id="bc-btn-submit-requisitar" class="bc-btn bc-btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="12" y1="18" x2="12" y2="12"></line>
+                <line x1="9" y1="15" x2="15" y2="15"></line>
+              </svg>
+              Requisitar Orçamento
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= 3. CLIENT PROPOSAL VIEW ================= -->
+    <div id="bc-proposal-view" style="display: none;">
+      <!-- Populated via JS -->
+    </div>
+
+  </main>
+
+  <!-- Application Logic -->
+  <script src="../js/security.js"></script>
+  <script src="../js/storage.js?v=2.4"></script>
+  <script src="../js/bc.js?v=2.4"></script>
+</body>
+</html>

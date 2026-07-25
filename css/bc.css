@@ -1,0 +1,611 @@
+/* ==========================================================================
+   NOVEL - BUDGET CENTER (BC) STYLESHEET
+   Light Mode Default - Vintage Editorial & Craftsmanship
+   ========================================================================== */
+
+.bc-body {
+  min-height: 100vh;
+  background-color: var(--light-bg);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  display: flex;
+  flex-direction: column;
+}
+
+/* BC Header */
+.bc-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: var(--border-fine);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1rem 0;
+}
+
+.bc-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bc-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bc-brand img {
+  height: 28px;
+  width: auto;
+}
+
+.bc-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--dark-slate);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.bc-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Card Wrappers */
+.bc-card {
+  background: var(--surface-white);
+  border: var(--border-fine);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-subtle);
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  transition: var(--transition-smooth);
+}
+
+/* Login View */
+.bc-login-wrapper {
+  max-width: 440px;
+  margin: 5rem auto;
+  width: 100%;
+}
+
+.bc-login-card {
+  text-align: center;
+}
+
+.bc-login-card h2 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.bc-login-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+/* Brand Selector Radio Switch */
+.bc-brand-radio-group {
+  display: inline-flex;
+  background: #EAEAEA;
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(64, 64, 64, 0.2);
+}
+
+.bc-brand-radio-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition-smooth);
+  color: var(--text-muted);
+}
+
+.bc-brand-radio-item input[type="radio"] {
+  display: none;
+}
+
+.bc-brand-radio-item.active {
+  background: var(--surface-white);
+  color: var(--pure-black);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.bc-brand-radio-item#brand-label-giffu.active {
+  color: #FD5E01;
+  border-bottom: 2px solid #FD5E01;
+}
+
+.bc-brand-radio-item#brand-label-novel.active {
+  color: #EE7000;
+  border-bottom: 2px solid #EE7000;
+}
+
+/* Form Controls & Single Row Layout */
+.bc-top-controls-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: nowrap;
+}
+
+@media (max-width: 900px) {
+  .bc-top-controls-row {
+    flex-wrap: wrap;
+  }
+}
+
+.bc-col-client {
+  flex: 1.2;
+  min-width: 180px;
+  margin-bottom: 0;
+}
+
+.bc-col-date {
+  width: 155px;
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+.bc-col-project {
+  flex: 1.2;
+  min-width: 200px;
+  margin-bottom: 0;
+}
+
+.bc-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.bc-form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--dark-slate);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.bc-form-group label .required-star {
+  color: var(--primary);
+  margin-left: 3px;
+}
+
+.bc-input, .bc-select, .bc-textarea {
+  width: 100%;
+  height: 44px;
+  padding: 0 0.85rem;
+  font-family: var(--font-family);
+  font-size: 0.92rem;
+  color: var(--text-main);
+  background: #FAFAFA;
+  border: 1px solid rgba(64, 64, 64, 0.25);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.bc-input:focus, .bc-select:focus, .bc-textarea:focus {
+  background: #FFFFFF;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(238, 112, 0, 0.12);
+}
+
+/* Buttons */
+.bc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.bc-btn-icon-only {
+  padding: 0.65rem;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bc-btn-primary {
+  background: var(--primary);
+  color: #FFFFFF;
+}
+
+.bc-btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.bc-btn-secondary {
+  background: #EAEAEA;
+  color: var(--dark-slate);
+  border: 1px solid rgba(64, 64, 64, 0.2);
+}
+
+.bc-btn-secondary:hover {
+  background: #DFDFDF;
+}
+
+.bc-btn-dashed {
+  background: transparent;
+  border: 2px dashed rgba(238, 112, 0, 0.4);
+  color: var(--primary);
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+}
+
+.bc-btn-dashed:hover {
+  background: rgba(238, 112, 0, 0.05);
+  border-color: var(--primary);
+}
+
+.bc-btn-danger-icon {
+  background: transparent;
+  color: #d9534f;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(217, 83, 79, 0.3);
+}
+
+.bc-btn-danger-icon:hover {
+  background: rgba(217, 83, 79, 0.1);
+}
+
+/* Editable Package Title */
+.package-title-input {
+  background: transparent;
+  border: 1px dashed transparent;
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #FFFFFF;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background-color: var(--primary);
+  width: 180px;
+  transition: var(--transition-smooth);
+}
+
+.package-title-input:hover, .package-title-input:focus {
+  border-color: #FFFFFF;
+  background-color: var(--primary-hover);
+  outline: none;
+}
+
+/* Package Toggle Accordion Card */
+.package-card {
+  border: 1px solid rgba(64, 64, 64, 0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  background: #FFFFFF;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.package-card.collapsed .package-body {
+  display: none;
+}
+
+.package-header {
+  background: #F5F5F5;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid rgba(64, 64, 64, 0.1);
+}
+
+.package-header:hover {
+  background: #EFEFEF;
+}
+
+.package-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.package-summary {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.package-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.package-toggle-icon {
+  transition: transform 0.25s ease;
+}
+
+.package-card.collapsed .package-toggle-icon {
+  transform: rotate(-90deg);
+}
+
+.package-body {
+  padding: 1.75rem;
+}
+
+/* Service Checkbox Grid & Colored Badges */
+.bc-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.bc-checkbox-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-size: 0.88rem;
+  font-weight: 500;
+  user-select: none;
+}
+
+.bc-checkbox-item span {
+  text-align: left;
+  line-height: 1.2;
+}
+
+.bc-checkbox-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Service Color Categories (Matching Image 2) */
+.svc-red { background-color: #FADBD8; color: #78281F; border: 1px solid #F5B7B1; }
+.svc-peach { background-color: #FBEEE6; color: #6E2C00; border: 1px solid #F5CBA7; }
+.svc-grey { background-color: #EAECEE; color: #2D3748; border: 1px solid #D5D8DC; }
+.svc-pink { background-color: #FADBD8; color: #6C3483; border: 1px solid #F1948A; }
+.svc-mint { background-color: #E8F8F5; color: #117864; border: 1px solid #A3E4D7; }
+.svc-gold { background-color: #FCF3CF; color: #7D6608; border: 1px solid #F9E79F; }
+.svc-tan { background-color: #F6DDCC; color: #6E2C00; border: 1px solid #EDBB99; }
+.svc-blue { background-color: #EBF5FB; color: #1B4F72; border: 1px solid #AED6F1; }
+.svc-purple { background-color: #F4ECF7; color: #512E5F; border: 1px solid #D7BDE2; }
+
+.bc-checkbox-item:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+.bc-custom-service-box {
+  margin-top: 0.75rem;
+  display: none;
+}
+
+.bc-custom-service-box.active {
+  display: block;
+}
+
+/* Currency & Investment Input */
+.bc-currency-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bc-currency-select {
+  width: 90px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.bc-currency-conversion-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(238, 112, 0, 0.08);
+  border: 1px solid rgba(238, 112, 0, 0.25);
+  color: var(--dark-slate);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.bc-currency-conversion-badge svg {
+  color: var(--primary);
+}
+
+/* Alert Messages */
+.bc-alert {
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.bc-alert-danger {
+  background: #FDEDEC;
+  border: 1px solid #F5C6CB;
+  color: #721C24;
+}
+
+.bc-alert-success {
+  background: #E8F8F5;
+  border: 1px solid #A3E4D7;
+  color: #117864;
+}
+
+/* Client Proposal View */
+.proposal-header-hero {
+  background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+  color: #FFFFFF;
+  padding: 3rem 2rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.proposal-header-hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100%;
+  background: radial-gradient(circle, rgba(238, 112, 0, 0.3) 0%, rgba(0,0,0,0) 70%);
+  pointer-events: none;
+}
+
+.proposal-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.proposal-meta-item small {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.25rem;
+}
+
+.proposal-meta-item span {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.proposal-package-view {
+  border: 1px solid rgba(64, 64, 64, 0.15);
+  border-radius: var(--radius-md);
+  background: #FFFFFF;
+  padding: 2rem;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--shadow-subtle);
+}
+
+.proposal-package-view h3 {
+  font-size: 1.35rem;
+  color: var(--pure-black);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.proposal-services-list {
+  list-style: none;
+  margin: 1.25rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.75rem;
+}
+
+.proposal-services-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+  color: var(--dark-slate);
+}
+
+.proposal-services-list li svg {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.proposal-investment-box {
+  background: #FAFAFA;
+  border-top: 2px solid var(--primary);
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.5rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.proposal-investment-amount {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--pure-black);
+}
+
+/* Expired Banner */
+.proposal-expired-card {
+  max-width: 600px;
+  margin: 5rem auto;
+  text-align: center;
+  padding: 3rem;
+  background: #FFFFFF;
+  border: 2px solid #d9534f;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+}
+
+.proposal-expired-card h2 {
+  color: #d9534f;
+  margin-bottom: 1rem;
+}
+
+/* PDF Print & Export Layout Optimizations */
+@media print {
+  body {
+    background: #FFFFFF !important;
+  }
+  .vintage-overlay, .bc-header, .bc-header-actions, .no-print {
+    display: none !important;
+  }
+  .bc-card, .proposal-package-view {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    break-inside: avoid;
+  }
+}
