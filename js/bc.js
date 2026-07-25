@@ -548,9 +548,32 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ==========================================================================
      6. SAVE DRAFT & REQUISITAR FORM HANDLING
      ========================================================================== */
+  let currentSelectedBrand = 'novel';
+
+  function onBrandChange(brandValue) {
+    currentSelectedBrand = (brandValue === 'giffu') ? 'giffu' : 'novel';
+
+    const novelLabel = document.getElementById('brand-label-novel');
+    const giffuLabel = document.getElementById('brand-label-giffu');
+    const novelRadio = document.querySelector('input[name="bc-brand"][value="novel"]');
+    const giffuRadio = document.querySelector('input[name="bc-brand"][value="giffu"]');
+
+    if (currentSelectedBrand === 'giffu') {
+      if (novelLabel) novelLabel.classList.remove('active');
+      if (giffuLabel) giffuLabel.classList.add('active');
+      if (giffuRadio) giffuRadio.checked = true;
+      if (novelRadio) novelRadio.checked = false;
+    } else {
+      if (giffuLabel) giffuLabel.classList.remove('active');
+      if (novelLabel) novelLabel.classList.add('active');
+      if (novelRadio) novelRadio.checked = true;
+      if (giffuRadio) giffuRadio.checked = false;
+    }
+  }
+
   function collectAndValidateFormData() {
     const selectedBrandEl = document.querySelector('input[name="bc-brand"]:checked');
-    const brand = selectedBrandEl ? selectedBrandEl.value : 'novel';
+    const brand = selectedBrandEl ? selectedBrandEl.value : currentSelectedBrand;
 
     let brandColor = '#EE7000';
     let brandFooter = 'Novel Produtora Audiovisual · novel.art.br · adm@novel.art.br';
@@ -650,19 +673,6 @@ document.addEventListener('DOMContentLoaded', () => {
       populateDatalists();
       showAlert('Orçamento salvo com sucesso!', 'success');
     });
-  }
-
-  function onBrandChange(brandValue) {
-    const novelLabel = document.getElementById('brand-label-novel');
-    const giffuLabel = document.getElementById('brand-label-giffu');
-
-    if (brandValue === 'giffu') {
-      if (novelLabel) novelLabel.classList.remove('active');
-      if (giffuLabel) giffuLabel.classList.add('active');
-    } else {
-      if (giffuLabel) giffuLabel.classList.remove('active');
-      if (novelLabel) novelLabel.classList.add('active');
-    }
   }
 
   if (budgetForm) {

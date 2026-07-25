@@ -88,12 +88,12 @@
           <div class="bc-brand-selector-row" style="margin-bottom: 1.75rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid rgba(64,64,64,0.1); padding-bottom: 1rem;">
             <label style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--dark-slate);">Orçamento <span class="required-star" style="color: var(--primary);">*</span></label>
             <div class="bc-brand-radio-group">
-              <label class="bc-brand-radio-item active" id="brand-label-novel">
-                <input type="radio" name="bc-brand" value="novel" checked onchange="NovelBC.onBrandChange('novel')">
+              <label class="bc-brand-radio-item active" id="brand-label-novel" onclick="NovelBC.onBrandChange('novel')">
+                <input type="radio" name="bc-brand" value="novel" checked>
                 <span>Novel</span>
               </label>
-              <label class="bc-brand-radio-item" id="brand-label-giffu">
-                <input type="radio" name="bc-brand" value="giffu" onchange="NovelBC.onBrandChange('giffu')">
+              <label class="bc-brand-radio-item" id="brand-label-giffu" onclick="NovelBC.onBrandChange('giffu')">
+                <input type="radio" name="bc-brand" value="giffu">
                 <span>Giffú</span>
               </label>
             </div>
@@ -188,7 +188,7 @@
 
   <!-- Application Logic -->
   <script src="../js/security.js"></script>
-  <script src="../js/storage.js?v=3.0"></script>
-  <script src="../js/bc.js?v=3.0"></script>
+  <script src="../js/storage.js?v=3.1"></script>
+  <script src="../js/bc.js?v=3.1"></script>
 </body>
 </html>
