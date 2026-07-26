@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let projectSlug = urlParams.get('p') || urlParams.get('project');
 
     if (!clientSlug && hash.includes('/')) {
-      const parts = hash.replace(/^#\/?/, '').split('/');
+      const parts = hash.replace(/^#\/?/, '').split('/').filter(p => p && p !== 'index.html');
       if (parts.length >= 2) {
         clientSlug = parts[0];
         projectSlug = parts[1];
@@ -175,8 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const bcIndex = path.indexOf('/bc');
       if (bcIndex !== -1) {
         const subPath = path.substring(bcIndex + 3).replace(/^\/+|\/+$/g, '');
-        const parts = subPath.split('/').filter(Boolean);
-        if (parts.length >= 2 && parts[0] !== 'index.html') {
+        const parts = subPath.split('/').filter(p => p && p !== 'index.html');
+        if (parts.length >= 2) {
           clientSlug = parts[0];
           projectSlug = parts[1];
         }
