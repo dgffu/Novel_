@@ -10,64 +10,28 @@ const StorageEngine = (() => {
   const STORAGE_CLIENTS_KEY = 'novel_clients_list_v1';
   const STORAGE_PROJECTS_KEY = 'novel_projects_list_v1';
   const STORAGE_PROPOSALS_KEY = 'novel_proposals_v1';
-  const CLOUD_ENDPOINT = 'https://jsonblob.com/api/jsonBlob/019f954d-319b-742c-8943-5f73c3b107a8';
+  const CLOUD_ENDPOINT = 'https://jsonblob.com/api/jsonBlob/019faa49-1518-793d-a861-1a9ea24bdbf5';
 
   const DEFAULT_ABOUT_IMG = 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80';
 
   const DEFAULT_VIDEOS = [
     {
-      id: 'v_101',
+      id: 'v_201',
       youtubeUrl: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
       youtubeId: 'LXb3EKWsInQ',
       thumbnailUrl: 'https://img.youtube.com/vi/LXb3EKWsInQ/maxresdefault.jpg',
-      title: 'Cinematic Reel 2026',
-      subtitle: 'Direção de Fotografia & Color Grading de Alta Performance',
-      tags: ['Showreel', 'Cinema', 'Color Grading', 'Publicidade']
+      title: 'Duda + Gabriel',
+      subtitle: 'Ensaio de Cinema no Museu do Ipiranga',
+      tags: ['Ensaio']
     },
     {
-      id: 'v_102',
+      id: 'v_202',
       youtubeUrl: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ',
       youtubeId: 'aqz-KE-bpKQ',
       thumbnailUrl: 'https://img.youtube.com/vi/aqz-KE-bpKQ/maxresdefault.jpg',
-      title: 'Vozes da Floresta',
-      subtitle: 'Documentário autoral gravado em resolução 6K anamórfica',
-      tags: ['Documentário', 'Anamórfico', 'Direção', 'Autoral']
-    },
-    {
-      id: 'v_103',
-      youtubeUrl: 'https://www.youtube.com/watch?v=d9MyW72ELq0',
-      youtubeId: 'd9MyW72ELq0',
-      thumbnailUrl: 'https://img.youtube.com/vi/d9MyW72ELq0/maxresdefault.jpg',
-      title: 'Campanha Porsche Experience',
-      subtitle: 'Comercial de alta velocidade produzido para mercado automotivo',
-      tags: ['Comercial', 'Automotivo', 'High-Speed', 'VFX']
-    },
-    {
-      id: 'v_104',
-      youtubeUrl: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk',
-      youtubeId: 'kJQP7kiw5Fk',
-      thumbnailUrl: 'https://img.youtube.com/vi/kJQP7kiw5Fk/maxresdefault.jpg',
-      title: 'Sombras do Amanhã',
-      subtitle: 'Videoclipe musical premiado em festivais internacionais',
-      tags: ['Videoclipe', 'Música', 'Direção de Arte', 'Narrativo']
-    },
-    {
-      id: 'v_105',
-      youtubeUrl: 'https://www.youtube.com/watch?v=e-ORhEE9VVg',
-      youtubeId: 'e-ORhEE9VVg',
-      thumbnailUrl: 'https://img.youtube.com/vi/e-ORhEE9VVg/maxresdefault.jpg',
-      title: 'Urban Architectures',
-      subtitle: 'Vídeo institucional conceito para grande grupo imobiliário',
-      tags: ['Institucional', 'Arquitetura', 'Drone 4K', 'Design']
-    },
-    {
-      id: 'v_106',
-      youtubeUrl: 'https://www.youtube.com/watch?v=9bZkp7q19f0',
-      youtubeId: '9bZkp7q19f0',
-      thumbnailUrl: 'https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg',
-      title: 'Sensações - Perfumaria Premium',
-      subtitle: 'Fashion Film com estética minimalista e luz dramática',
-      tags: ['Fashion Film', 'Moda', 'Estética', 'Iluminação']
+      title: 'Brenda + Dalmo',
+      subtitle: 'Same-Day Film na Casa Giardino',
+      tags: ['Casamento']
     }
   ];
 
@@ -91,7 +55,13 @@ const StorageEngine = (() => {
         localStorage.setItem(STORAGE_VIDEOS_KEY, JSON.stringify(DEFAULT_VIDEOS));
         return DEFAULT_VIDEOS;
       }
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      // Migration check: If stored videos are legacy demo placeholders, update to current defaults
+      if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].id === 'v_101' && parsed[0].title === 'Cinematic Reel 2026') {
+        localStorage.setItem(STORAGE_VIDEOS_KEY, JSON.stringify(DEFAULT_VIDEOS));
+        return DEFAULT_VIDEOS;
+      }
+      return parsed;
     } catch (e) {
       console.error('Error reading videos storage:', e);
       return DEFAULT_VIDEOS;
@@ -231,7 +201,7 @@ const StorageEngine = (() => {
   }
 
   /**
-   * Syncs state to Cloud JSON endpoint
+   * Syncs state to Cloud JSON endpoint (with automatic endpoint recovery if 404)
    */
   async function syncToCloud(videos, aboutImage, clients = null, projects = null, proposals = null) {
     try {
@@ -244,7 +214,9 @@ const StorageEngine = (() => {
         updatedAt: Date.now()
       };
 
-      await fetch(CLOUD_ENDPOINT, {
+      const endpoint = localStorage.getItem('novel_dynamic_cloud_endpoint') || CLOUD_ENDPOINT;
+
+      let res = await fetch(endpoint, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -252,6 +224,25 @@ const StorageEngine = (() => {
         },
         body: JSON.stringify(payload)
       });
+
+      // Self-healing: If cloud endpoint returned 404, auto-create a new blob and save endpoint
+      if (!res.ok && res.status === 404) {
+        const createRes = await fetch('https://jsonblob.com/api/jsonBlob', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+        if (createRes.ok) {
+          const loc = createRes.headers.get('Location') || createRes.headers.get('location');
+          if (loc) {
+            const newEndpoint = loc.startsWith('http') ? loc : `https://jsonblob.com${loc}`;
+            localStorage.setItem('novel_dynamic_cloud_endpoint', newEndpoint);
+          }
+        }
+      }
     } catch (e) {
       console.warn('Cloud sync fallback to local:', e);
     }
@@ -262,8 +253,17 @@ const StorageEngine = (() => {
    */
   async function fetchCloudState() {
     try {
-      const res = await fetch(CLOUD_ENDPOINT, { cache: 'no-store' });
-      if (!res.ok) return;
+      const endpoint = localStorage.getItem('novel_dynamic_cloud_endpoint') || CLOUD_ENDPOINT;
+      const res = await fetch(endpoint, { cache: 'no-store' });
+      
+      if (!res.ok) {
+        // If 404, force push local data to restore cloud endpoint
+        const currentLocal = getVideos();
+        if (currentLocal && currentLocal.length > 0) {
+          syncToCloud(currentLocal);
+        }
+        return;
+      }
 
       const cloudData = await res.json();
       let cloudVideos = null;
