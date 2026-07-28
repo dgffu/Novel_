@@ -1,9 +1,26 @@
 /**
- * NOVEL - Security Engine
+ * NOVEL - Security Engine & Anti-Caching Engine
  * Performs salted cryptographic SHA-256 verification via WebCrypto API.
- * Ensures zero plaintext credentials exist in client source code.
- * Includes rate-limiting, lockout timer, XSS sanitization, and session state.
+ * Cleans up stale legacy Service Workers & caches across all devices.
  */
+
+// Immediate execution: Unregister any legacy Service Worker & purge obsolete HTTP caches
+if (typeof window !== 'undefined') {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    }).catch(() => {});
+  }
+  if ('caches' in window) {
+    caches.keys().then(names => {
+      for (let name of names) {
+        caches.delete(name);
+      }
+    }).catch(() => {});
+  }
+}
 
 const SecurityEngine = (() => {
   const SALT = 'novel_audiovisual_2026_salt_v1';
