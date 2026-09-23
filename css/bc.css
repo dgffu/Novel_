@@ -144,6 +144,11 @@
   border-bottom: 2px solid #EE7000;
 }
 
+.bc-brand-radio-item#brand-label-barquo.active {
+  color: #FCB531;
+  border-bottom: 2px solid #FCB531;
+}
+
 /* Form Controls & Single Row Layout */
 .bc-top-controls-row {
   display: flex;
@@ -1059,6 +1064,14 @@
   height: 100%;
   background: radial-gradient(circle, rgba(238, 112, 0, 0.3) 0%, rgba(0,0,0,0) 70%);
   pointer-events: none;
+}
+
+.proposal-header-hero.brand-barquo-hero {
+  background: #272262;
+}
+
+.proposal-header-hero.brand-barquo-hero::after {
+  display: none;
 }
 
 .proposal-meta-grid {

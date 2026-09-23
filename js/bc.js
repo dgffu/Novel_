@@ -333,6 +333,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (proposal.brand === 'giffu') {
       const radio = document.querySelector('input[name="bc-brand"][value="giffu"]');
       if (radio) { radio.checked = true; onBrandChange('giffu'); }
+    } else if (proposal.brand === 'barquo') {
+      const radio = document.querySelector('input[name="bc-brand"][value="barquo"]');
+      if (radio) { radio.checked = true; onBrandChange('barquo'); }
     } else {
       const radio = document.querySelector('input[name="bc-brand"][value="novel"]');
       if (radio) { radio.checked = true; onBrandChange('novel'); }
@@ -375,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Restore itemized services & prices
         if (Array.isArray(pkg.itemizedServices)) {
           pkg.itemizedServices.forEach(itemized => {
-            if (itemized.name.startsWith('Personalizado')) {
+            if (itemized.customText !== undefined || itemized.isCustomItem || itemized.name.startsWith('Personalizado')) {
               if (!pkg.customItems || pkg.customItems.length === 0) {
                 const customCheck = document.getElementById(`${pkgId}-custom-check`);
                 const customBox = document.getElementById(`${pkgId}-custom-box`);
@@ -1151,7 +1154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (customRows.length > 0) {
           customRows.forEach(row => {
             const t = row.querySelector('.bc-custom-text-input')?.value.trim();
-            selectedServices.push(t ? `Personalizado (${t})` : 'Personalizado');
+            selectedServices.push(t || 'Personalizado');
           });
         } else {
           selectedServices.push('Personalizado');
@@ -1189,24 +1192,26 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentSelectedBrand = 'novel';
 
   function onBrandChange(brandValue) {
-    currentSelectedBrand = (brandValue === 'giffu') ? 'giffu' : 'novel';
-
-    const novelLabel = document.getElementById('brand-label-novel');
-    const giffuLabel = document.getElementById('brand-label-giffu');
-    const novelRadio = document.querySelector('input[name="bc-brand"][value="novel"]');
-    const giffuRadio = document.querySelector('input[name="bc-brand"][value="giffu"]');
-
-    if (currentSelectedBrand === 'giffu') {
-      if (novelLabel) novelLabel.classList.remove('active');
-      if (giffuLabel) giffuLabel.classList.add('active');
-      if (giffuRadio) giffuRadio.checked = true;
-      if (novelRadio) novelRadio.checked = false;
+    if (brandValue === 'giffu') {
+      currentSelectedBrand = 'giffu';
+    } else if (brandValue === 'barquo') {
+      currentSelectedBrand = 'barquo';
     } else {
-      if (giffuLabel) giffuLabel.classList.remove('active');
-      if (novelLabel) novelLabel.classList.add('active');
-      if (novelRadio) novelRadio.checked = true;
-      if (giffuRadio) giffuRadio.checked = false;
+      currentSelectedBrand = 'novel';
     }
+
+    const brands = ['novel', 'giffu', 'barquo'];
+    brands.forEach(b => {
+      const label = document.getElementById(`brand-label-${b}`);
+      const radio = document.querySelector(`input[name="bc-brand"][value="${b}"]`);
+      if (b === currentSelectedBrand) {
+        if (label) label.classList.add('active');
+        if (radio) radio.checked = true;
+      } else {
+        if (label) label.classList.remove('active');
+        if (radio) radio.checked = false;
+      }
+    });
   }
 
   function collectAndValidateFormData() {
@@ -1221,6 +1226,10 @@ document.addEventListener('DOMContentLoaded', () => {
       brandColor = '#FD5E01';
       brandFooter = 'Dilan Giffú · Motion Artist & Filmmaker · Portfólio: https://giffu.com.br';
       brandTitle = 'GIFFÚ';
+    } else if (brand === 'barquo') {
+      brandColor = '#272262';
+      brandFooter = 'Barquo Creative Studio · barquo.com | novel.art.br';
+      brandTitle = 'BARQUO';
     }
 
     const client = clientInput.value.trim();
@@ -1300,13 +1309,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const customText = row.querySelector('.bc-custom-text-input')?.value.trim() || '';
             const customPriceVal = parseFloat(row.querySelector('.bc-custom-item-price-input')?.value) || 0;
             const priceBrl = (currency === 'USD') ? Math.round(customPriceVal * rate * 100) / 100 : customPriceVal;
-            const name = customText ? `Personalizado: ${customText}` : 'Personalizado';
+            const name = customText || 'Personalizado';
             itemizedServices.push({
               name: name,
               price: priceBrl,
               displayPrice: customPriceVal,
               customText: customText,
-              customPrice: customPriceVal
+              customPrice: customPriceVal,
+              isCustomItem: true
             });
             sumItemizedBrl += priceBrl;
             customItemsData.push({ text: customText, price: customPriceVal });
@@ -1489,11 +1499,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render Active Proposal
     proposalView.style.display = 'block';
 
-    const brandColor = proposal.brandColor || (proposal.brand === 'giffu' ? '#FD5E01' : '#EE7000');
-    const brandFooter = proposal.brandFooter || (proposal.brand === 'giffu'
-      ? 'Dilan Giffú · Motion Artist & Filmmaker · Portfólio: giffu.com.br'
-      : 'Novel Produtora Audiovisual · novel.art.br · adm@novel.art.br');
-    const brandTagTitle = proposal.brand === 'giffu' ? 'PROPOSTA COMERCIAL • GIFFÚ' : 'PROPOSTA COMERCIAL';
+    const brandColor = proposal.brandColor || (proposal.brand === 'barquo' ? '#272262' : (proposal.brand === 'giffu' ? '#FD5E01' : '#EE7000'));
+    const brandFooter = proposal.brandFooter || (proposal.brand === 'barquo'
+      ? 'Barquo Creative Studio · barquo.com | novel.art.br'
+      : (proposal.brand === 'giffu'
+        ? 'Dilan Giffú · Motion Artist & Filmmaker · Portfólio: giffu.com.br'
+        : 'Novel Produtora Audiovisual · novel.art.br · adm@novel.art.br'));
+    const brandTagTitle = proposal.brand === 'barquo'
+      ? 'Proposta Comercial · barquo'
+      : (proposal.brand === 'giffu' ? 'PROPOSTA COMERCIAL • GIFFÚ' : 'PROPOSTA COMERCIAL');
+    const brandTagTransform = proposal.brand === 'barquo' ? 'none' : 'uppercase';
+    const brandTagColor = proposal.brand === 'barquo' ? '#FCB531' : brandColor;
 
     const packagesHtml = proposal.packages.map(pkg => {
       const currencySymbol = pkg.currency === 'USD' ? 'US$' : 'R$';
@@ -1537,7 +1553,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${brandColor}" stroke-width="2">
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span style="font-weight: 500;">${escapeHtml(s.name)}</span>
+                    <span style="font-weight: 500;">${escapeHtml((s.customText || s.name || '').replace(/^Personalizado:\s*/i, ''))}</span>
                   </div>
                   ${priceBadge}
                 </li>`;
@@ -1570,9 +1586,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <!-- Printable Proposal Container (PDF Export Target) -->
       <div id="proposal-printable-area">
         <!-- Hero Card -->
-        <div class="proposal-header-hero">
+        <div class="proposal-header-hero ${proposal.brand === 'barquo' ? 'brand-barquo-hero' : ''}">
           <div>
-            <span style="font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: ${brandColor}; font-weight: 700;">${brandTagTitle}</span>
+            <span style="font-size: 0.8rem; letter-spacing: 0.1em; text-transform: ${brandTagTransform}; color: ${brandTagColor}; font-weight: 700;">${brandTagTitle}</span>
             <h1 style="font-size: 2.2rem; color: #fff; margin-top: 0.25rem;">${escapeHtml(proposal.project)}</h1>
           </div>
 
@@ -1602,7 +1618,10 @@ document.addEventListener('DOMContentLoaded', () => {
           <p>
             ${proposal.brand === 'giffu'
               ? `Dilan Giffú · Motion Artist & Filmmaker · Portfólio: <a href="https://giffu.com.br" target="_blank" style="color: ${brandColor}; text-decoration: underline; font-weight: 600;">https://giffu.com.br</a>`
-              : `Novel Produtora Audiovisual · <a href="https://novel.art.br" target="_blank" style="color: ${brandColor}; text-decoration: underline; font-weight: 600;">novel.art.br</a> · <a href="mailto:adm@novel.art.br" style="color: inherit; text-decoration: underline;">adm@novel.art.br</a>`
+              : (proposal.brand === 'barquo'
+                ? `Barquo Creative Studio · <a href="https://barquo.com" target="_blank" style="color: ${brandColor}; text-decoration: underline; font-weight: 600;">barquo.com</a> | <a href="https://novel.art.br" target="_blank" style="color: ${brandColor}; text-decoration: underline; font-weight: 600;">novel.art.br</a>`
+                : `Novel Produtora Audiovisual · <a href="https://novel.art.br" target="_blank" style="color: ${brandColor}; text-decoration: underline; font-weight: 600;">novel.art.br</a> · <a href="mailto:adm@novel.art.br" style="color: inherit; text-decoration: underline;">adm@novel.art.br</a>`
+              )
             }
           </p>
         </div>
