@@ -1192,15 +1192,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentSelectedBrand = 'novel';
 
   function onBrandChange(brandValue) {
-    if (brandValue === 'giffu') {
-      currentSelectedBrand = 'giffu';
-    } else if (brandValue === 'barquo') {
-      currentSelectedBrand = 'barquo';
-    } else {
-      currentSelectedBrand = 'novel';
-    }
+    currentSelectedBrand = (brandValue === 'giffu') ? 'giffu' : 'novel';
 
-    const brands = ['novel', 'giffu', 'barquo'];
+    const brands = ['novel', 'giffu'];
     brands.forEach(b => {
       const label = document.getElementById(`brand-label-${b}`);
       const radio = document.querySelector(`input[name="bc-brand"][value="${b}"]`);
