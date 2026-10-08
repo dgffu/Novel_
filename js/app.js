@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const adminDropdownMenu = document.getElementById('admin-dropdown-menu');
   const adminItemUpload = document.getElementById('admin-item-upload');
   const adminItemManage = document.getElementById('admin-item-manage');
+  const adminItemAboutImg = document.getElementById('admin-item-about-img');
   const adminItemLogout = document.getElementById('admin-item-logout');
 
   const loginModal = document.getElementById('login-modal');
@@ -127,13 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   if (logoBtn) {
-    logoBtn.addEventListener('click', () => switchTab('portfolio'));
+    logoBtn.addEventListener('click', () => switchTab('sobre'));
   }
 
   /* ==========================================================================
      2. PORTFOLIO GRID & SEO TAG FILTERING
      ========================================================================== */
   function renderTagFilters() {
+    if (!tagFiltersContainer) return;
     const tags = StorageEngine.getAllTags();
     tagFiltersContainer.innerHTML = '';
 
@@ -156,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function filterByTag(tag) {
     currentActiveTag = tag;
+    if (!tagFiltersContainer) return;
     
     const filterBtns = tagFiltersContainer.querySelectorAll('.filter-btn');
     filterBtns.forEach(btn => {
@@ -194,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderVideoGrid() {
+    if (!videoGrid) return;
     const allVideos = StorageEngine.getVideos();
     const isAdmin = SecurityEngine.isAuthenticated();
 
@@ -368,6 +372,13 @@ document.addEventListener('DOMContentLoaded', () => {
     adminItemManage.onclick = () => {
       if (adminDropdownMenu) adminDropdownMenu.classList.remove('active');
       openAdminManageModal();
+    };
+  }
+
+  if (adminItemAboutImg) {
+    adminItemAboutImg.onclick = () => {
+      if (adminDropdownMenu) adminDropdownMenu.classList.remove('active');
+      openAboutImgModal();
     };
   }
 

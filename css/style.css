@@ -774,13 +774,16 @@ nav.main-nav {
   padding: 2rem 0;
 }
 
+.about-text h1,
 .about-text h2 {
   font-size: 2.6rem;
   color: var(--pure-black);
   margin-bottom: 1.5rem;
   font-weight: 600;
+  line-height: 1.15;
 }
 
+.about-text h1 span,
 .about-text h2 span {
   color: var(--primary);
   font-weight: 300;
